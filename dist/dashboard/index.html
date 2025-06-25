@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" @@bodySetup>
+  <!-- [Head] start -->
+
+  <head>
+    {% set title = "Home" %}
+    {% include 'layouts/head-page-meta.html' %}
+    {% include 'layouts/head-css.html' %}
+  </head>
+  <!-- [Head] end -->
+  <!-- [Body] Start -->
+
+  <body>
+    {% include 'layouts/layout-vertical.html' %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+      <div class="pc-content">
+        {% set breadcrumb_item = 'Dashboard' %}
+        {% set breadcrumb_item_active = 'Default' %}
+        {% include 'layouts/breadcrumb.html' %}
+        <!-- [ Main Content ] start -->
+         
+        <!-- [ Main Content ] end -->
+      </div>
+    </div>
+    <!-- [ Main Content ] end -->
+      {% include 'layouts/footer-block.html' %}
+      {% include 'layouts/footer-js.html' %}
+
+  </body>
+  <!-- [Body] end -->
+</html>

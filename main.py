@@ -5,16 +5,22 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, 'dist'),
-    static_folder=os.path.join(BASE_DIR, 'dist', 'assets')
+    template_folder=os.path.join(BASE_DIR, 'dist', ''),  # HTML-lər burdadır
+    static_folder=os.path.join(BASE_DIR, 'dist', 'assets')  # JS, CSS, şəkillər
 )
 
 @app.route('/')
 def home():
-    index_path = os.path.join(app.template_folder, 'index.html')
-    print("Looking for:", index_path)
-    print("Exists?", os.path.exists(index_path))  # Bu hissə faylın həqiqətən olub olmadığını yoxlayır
-    return render_template('index.html')
+    return render_template('dashboard/index.html')
+
+@app.route('/<path:filename>')
+def serve_any_page(filename):
+    full_path = os.path.join(app.template_folder, filename)
+    print("Looking for:", full_path)
+    print("Exists?", os.path.exists(full_path))
+    if os.path.exists(full_path):
+        return render_template(filename)
+    return "Not Found", 404
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
