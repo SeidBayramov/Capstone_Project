@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" data-pc-theme="light">
+<head>
+  <title>My Profile | ShadowLink</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../assets/images/shadow_link_dark.svg" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f1f5f9;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-bg span {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .auth-bg .circle1 {
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: #e0f2fe;
+      animation: floating 6s infinite ease-in-out;
+    }
+
+    .auth-bg .circle2 {
+      top: 150px;
+      right: -150px;
+      width: 25px;
+      height: 25px;
+      background: #3b82f6;
+      animation: floating 9s infinite ease-in-out;
+    }
+
+    .auth-bg .circle3 {
+      left: -150px;
+      bottom: 150px;
+      width: 25px;
+      height: 25px;
+      background: #dbeafe;
+      animation: floating 7s infinite ease-in-out;
+    }
+
+    .auth-bg .circle4 {
+      left: -100px;
+      bottom: -100px;
+      width: 300px;
+      height: 300px;
+      background: #f3f4f6;
+      animation: floating 8s infinite ease-in-out;
+    }
+
+    @keyframes floating {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .profile-container {
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .profile-logo img {
+      width: 80px;
+      border-radius: 12px;
+      background: white;
+      padding: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background-color: #3b82f6;
+      color: white;
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 14px;
+    }
+
+    .back-link a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-bg">
+    <span class="circle1"></span>
+    <span class="circle2"></span>
+    <span class="circle3"></span>
+    <span class="circle4"></span>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-logo">
+      <img src="../assets/images/shadow_link_dark.svg" alt="Logo">
+    </div>
+    <h3>My Profile</h3>
+    <form id="profileForm">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="First Name" value="" required>
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Last Name" value="" required>
+      </div>
+
+      <div class="form-group">
+        <input type="email" class="form-control" placeholder="Email" value="" required>
+      </div>
+
+      <div class="form-group">
+        <input type="tel" class="form-control" placeholder="Phone Number" value="" required>
+      </div>
+
+      <div class="form-group">
+        <input type="date" class="form-control" placeholder="Birthday" value="2000-01-01" required>
+      </div>
+
+      <div class="form-group">
+        <select class="form-control" required>
+          <option value="">Select Gender</option>
+          <option selected>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="New Password (optional)">
+      </div>
+
+      <div class="form-group">
+        <label for="profilePic">Change Profile</label>
+        <input type="file" class="form-control" accept="image/*" id="profilePic">
+      </div>
+
+      <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+    <div class="back-link">
+      <a href="../index.html">&larr; Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("profileForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Your profile has been updated!");
+    });
+  </script>
+</body>
+</html>
