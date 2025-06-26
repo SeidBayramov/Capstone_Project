@@ -17,52 +17,6 @@
   <link rel="stylesheet" href="../assets/fonts/material.css" />
   <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-  <style>
-    .social-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 10px;
-      font-weight: 500;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: all 0.2s ease-in-out;
-      color: #fff;
-    }
-
-    .social-button:hover {
-      transform: scale(1.02);
-    }
-
-    .google-btn {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      color: #444;
-      font-weight: 600;
-    }
-
-    .google-btn:hover {
-      background-color: #f7f7f7;
-    }
-
-    .social-facebook {
-      background-color: #3b5998;
-      color: white;
-    }
-
-    .social-linkedin {
-      background-color: #0077b5;
-      color: white;
-    }
-
-    .google-logo {
-      width: 18px;
-      height: 18px;
-    }
-  </style>
 </head>
 
 <body>
@@ -81,71 +35,50 @@
             <div class="card-body !p-10">
               <div class="text-center mb-8">
                 <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px; padding-bottom: 15px;">
-                  <img src="../assets/images/shadow_link_dark.svg"
-                    style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);" />
+                  <img src="../assets/images/shadow_link_dark.svg" style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);" />
                 </div>
               </div>
 
               <h4 class="text-center font-medium mb-4">Sign up</h4>
 
-              <!-- Sosial Media Login -->
-              <div class="text-center mb-4">
-                <p class="text-muted">Sign up with</p>
-                <div class="flex flex-col gap-3">
-                  <button class="social-button google-btn">
-                    <img src="../assets/images/google-logo.svg" alt="Google" class="google-logo" />
-                    Sign up with Google
-                  </button>
-                  <button class="social-button social-facebook"><i class="fab fa-facebook-f"></i> Sign up with Facebook</button>
-                  <button class="social-button social-linkedin"><i class="fab fa-linkedin-in"></i> Sign up with LinkedIn</button>
+              <form id="registerForm" method="POST" action="/register">
+                <div class="grid grid-cols-12 gap-3 mb-3">
+                  <div class="col-span-12 sm:col-span-6">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name" required />
+                  </div>
+                  <div class="col-span-12 sm:col-span-6">
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" required />
+                  </div>
                 </div>
-              </div>
 
-              <div class="text-center text-muted my-4">OR</div>
-
-              <!-- Form Fields -->
-              <div class="grid grid-cols-12 gap-3 mb-3">
-                <div class="col-span-12 sm:col-span-6">
-                  <input type="text" class="form-control" placeholder="First Name" />
+                <div class="mb-3">
+                  <input type="email" class="form-control" name="email" id="emailInput" placeholder="Email Address" required />
+                  <div id="emailError" class="text-red-500 text-sm mt-2" style="display: none;">
+                    Please enter a valid email address.
+                  </div>
                 </div>
-                <div class="col-span-12 sm:col-span-6">
-                  <input type="text" class="form-control" placeholder="Last Name" />
+
+                <div class="mb-3">
+                  <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Password" required />
                 </div>
-              </div>
 
-              <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Email Address" id="emailInput" required />
-                <div id="emailError" class="text-red-500 text-sm mt-2" style="display: none;">
-                  Please enter a valid email address.
+                <div class="mb-4">
+                  <input type="password" class="form-control" id="confirmPasswordInput" placeholder="Confirm Password" required />
+                  <div id="passwordError" class="text-red-500 text-sm mt-2" style="display: none;">
+                    Passwords do not match.
+                  </div>
                 </div>
-              </div>
 
-              <div class="mb-3">
-                <input type="password" class="form-control" placeholder="Password" id="passwordInput" />
-              </div>
-
-              <div class="mb-4">
-                <input type="password" class="form-control" placeholder="Confirm Password" id="confirmPasswordInput" />
-                <div id="passwordError" class="text-red-500 text-sm mt-2" style="display: none;">
-                  Passwords do not match.
+                <div class="mt-4 text-center">
+                  <button type="submit" class="btn btn-primary mx-auto shadow-2xl">Sign up</button>
                 </div>
-              </div>
-
-              <div class="flex mt-1 justify-between items-center flex-wrap">
-                <div class="form-check">
-                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked />
-                  <label class="form-check-label text-muted" for="customCheckc1">I agree to all the Terms &amp; Condition</label>
-                </div>
-              </div>
-
-              <div class="mt-4 text-center">
-                <button type="button" class="btn btn-primary mx-auto shadow-2xl" id="registerBtn">Sign up</button>
-              </div>
+              </form>
 
               <div class="flex justify-between items-end flex-wrap mt-4">
                 <h6 class="font-medium mb-0">Already have an Account?</h6>
                 <a href="login-v1.html" class="text-primary-500">Login</a>
               </div>
+
             </div>
           </div>
 
@@ -155,13 +88,14 @@
   </div>
 
   <script>
-    document.getElementById("registerBtn").addEventListener("click", function () {
-      const emailInput = document.getElementById("emailInput");
-      const emailError = document.getElementById("emailError");
-      const passwordInput = document.getElementById("passwordInput");
-      const confirmPasswordInput = document.getElementById("confirmPasswordInput");
-      const passwordError = document.getElementById("passwordError");
+    const form = document.getElementById("registerForm");
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
 
+    form.addEventListener("submit", function (e) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       let valid = true;
 
@@ -181,10 +115,7 @@
         passwordError.style.display = "none";
       }
 
-      if (valid) {
-        alert("Registration successful!");
-        // You can redirect or call backend here
-      }
+      if (!valid) e.preventDefault();
     });
   </script>
 </body>
