@@ -222,12 +222,28 @@
 
         <!-- [ Main Content ] start -->
               <div class="col-span-12">
-          <div class="card">
-            <div class="card-header">
-              <h5>Burada nəsə olacaq</h5>
-            </div>
             <div class="card-body">
-            </div>
+  <form id="query-form" class="mb-4">
+    <label for="query-input" class="font-semibold block mb-1">Enter IP / Domain / Name:</label>
+    <input type="text" id="query-input" class="form-control w-full mb-3" placeholder="e.g. 8.8.8.8 or example.com" required />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div id="loading" class="text-blue-600 mb-2" style="display: none;">🔄 Loading data...</div>
+  <div id="error" class="text-red-600 mb-2" style="display: none;">⚠️ Failed to fetch data.</div>
+  <div id="no-result" class="text-gray-600 mb-2" style="display: none;">ℹ️ No data found.</div>
+
+  <div id="result-container" class="mt-4 hidden">
+    <div class="border rounded p-4 bg-white shadow">
+      <h5 class="font-semibold mb-2">🔍 Result:</h5>
+      <p><strong>Type:</strong> <span id="res-type"></span></p>
+      <p><strong>Threat Score:</strong> <span id="res-score"></span></p>
+      <p><strong>Tags:</strong> <span id="res-tags"></span></p>
+      <p><strong>Sources:</strong> <span id="res-sources"></span></p>
+    </div>
+  </div>
+</div>
+
           </div>
         <!-- [ Main Content ] end -->
       </div>
@@ -284,7 +300,48 @@
     <script>
       main_layout_change('vertical');
     </script>
-    
+    <script>
+  document.getElementById("query-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const query = document.getElementById("query-input").value.trim();
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const noResult = document.getElementById("no-result");
+    const resultContainer = document.getElementById("result-container");
+    const resType = document.getElementById("res-type");
+    const resScore = document.getElementById("res-score");
+    const resTags = document.getElementById("res-tags");
+    const resSources = document.getElementById("res-sources");
+
+    loading.style.display = "block";
+    error.style.display = "none";
+    noResult.style.display = "none";
+    resultContainer.classList.add("hidden");
+
+    try {
+      const res = await fetch(`/api/query?value=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      loading.style.display = "none";
+
+      if (!res.ok || !data || Object.keys(data).length === 0) {
+        noResult.style.display = "block";
+        return;
+      }
+
+      resType.textContent = data.type || "N/A";
+      resScore.textContent = data.threat_score || "0";
+      resTags.textContent = (data.tags || []).join(", ");
+      resSources.textContent = (data.sources || []).join(", ");
+
+      resultContainer.classList.remove("hidden");
+    } catch (err) {
+      console.error(err);
+      loading.style.display = "none";
+      error.style.display = "block";
+    }
+  });
+</script>
 
   </body>
   <!-- [Body] end -->
