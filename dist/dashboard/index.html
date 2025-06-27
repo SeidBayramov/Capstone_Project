@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" @@bodySetup>
+<html lang="en">
   <!-- [Head] start -->
   <head>
     {% set title = "Welcome" %}
@@ -23,12 +23,16 @@
         <div class="grid grid-cols-12 gap-6 mt-6">
           <div class="col-span-12 xl:col-span-8">
             <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
-              <h1 class="text-3xl font-bold text-primary-600 mb-3">Welcome to ShadowLink Platform! 👋</h1>
-              <p class="text-gray-700 dark:text-gray-300 text-lg">
-                This is your centralized dashboard for navigating insights, managing your profile, and accessing the intelligence tools you need.
+              <h1 class="text-3xl font-bold text-primary-600 mb-4 leading-snug">
+                Welcome to <span class="text-primary-700">ShadowLink</span> Platform! 👋
+              </h1>
+              <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                This is your centralized dashboard for navigating insights, managing your profile,
+                and accessing the intelligence tools you need.
               </p>
               <div class="mt-6">
-                <a href="../index.html" class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2 px-5 rounded-lg transition">
+                <a href="../index.html"
+                  class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2 px-5 rounded-lg transition">
                   Go to Dashboard
                 </a>
               </div>
@@ -36,36 +40,66 @@
           </div>
 
           <div class="col-span-12 xl:col-span-4">
-            <div class="bg-primary-100 dark:bg-primary-900 p-6 rounded-2xl shadow-md text-center">
+            <div class="bg-primary-200 dark:bg-primary-800 p-6 rounded-2xl shadow-md text-center hover:shadow-lg transition">
               <img src="../assets/images/welcome-illustration.svg" alt="Welcome" class="mx-auto w-40 mb-4" />
               <h2 class="text-xl font-semibold text-primary-700 dark:text-white">Getting Started</h2>
-              <p class="text-gray-700 dark:text-gray-300 text-sm mt-2">Explore documentation, connect your integrations, or update your profile settings to begin.</p>
+              <p class="text-gray-700 dark:text-gray-300 text-sm mt-2 leading-relaxed">
+                Explore documentation, connect your integrations, or update your profile settings to begin.
+              </p>
             </div>
           </div>
         </div>
         <!-- [ Welcome Content ] end -->
 
+        <!-- [ Features Section ] start -->
+        <div class="mt-8 bg-primary-50 dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+          <h2 class="text-2xl font-semibold text-primary-700 dark:text-white mb-4 text-center">Key Features of TIPlatform</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div class="text-center">
+              <img src="../assets/images/intel.svg" alt="Intelligence" class="mx-auto w-12 mb-3" />
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Live Threat Intel</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Fetch and correlate real-time intelligence from multiple sources.</p>
+            </div>
+            <div class="text-center">
+              <img src="../assets/images/red-blue.svg" alt="Collaboration" class="mx-auto w-12 mb-3" />
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Red & Blue Team Collaboration</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Empowers both sides with shared context and tools.</p>
+            </div>
+            <div class="text-center">
+              <img src="../assets/images/automation.svg" alt="Automation" class="mx-auto w-12 mb-3" />
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Automation Ready</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Designed to scale with your automated workflows and enrichment needs.</p>
+            </div>
+            <div class="text-center">
+              <img src="../assets/images/ui.svg" alt="Interface" class="mx-auto w-12 mb-3" />
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Unified Interface</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Everything you need in one centralized, intuitive interface.</p>
+            </div>
+          </div>
+        </div>
+        <!-- [ Features Section ] end -->
+
         <!-- [ Overview Section ] start -->
         <div class="mt-8 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
           <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">TIPlatform Overview</h2>
-          <p class="text-gray-700 dark:text-gray-300 mb-3">
+          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             In today’s rapidly evolving cyber threat landscape, both offensive (Red Team) and defensive (Blue Team) operations require access to reliable, timely, and contextual threat intelligence.
             However, most platforms available in the market tend to cater to only one side of the cybersecurity spectrum, often leaving teams working in silos with fragmented insights.
           </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3">
+          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             To address this gap, our project introduces TIPlatform – a web-based threat intelligence environment designed to unify the efforts of Red and Blue teams through a single, collaborative interface.
             This platform allows users to input basic identifiers (such as names, domains, or IP addresses) and automatically retrieves correlated threat intelligence from integrated data sources.
           </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3">
+          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             Red Team professionals can leverage the platform to simulate realistic attack scenarios based on live threat feeds and exposure analysis. Meanwhile, Blue Team analysts can use the same tool to investigate suspicious activity, enrich alerts, and validate incidents with real-world data.
           </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3">
+          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             By bringing both teams onto a shared platform, TIPlatform fosters collaboration, speed, and operational efficiency. It aligns with Purple Team strategies by allowing both offensive and defensive sides to work with the same intelligence context, ultimately leading to stronger security posture and quicker decision-making.
           </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3">
+          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             The platform has been designed with scalability and modularity in mind. While the core system focuses on data gathering and visualization, future versions may include dark web insights, AI-driven prioritization, and incident simulation features.
           </p>
-          <p class="text-gray-700 dark:text-gray-300">
+          <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
             TIPlatform is more than just a tool—it's a bridge between proactive offense and responsive defense.
           </p>
         </div>

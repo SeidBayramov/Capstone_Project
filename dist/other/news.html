@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
+<head>
+  <title>News</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="News Page - ShadowLink Platform" />
+  <meta name="author" content="ShadowLink Team 9" />
+  <link rel="icon" href="../assets/images/shadow_link_symbol.svg" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/fonts/phosphor/duotone/style.css" />
+  <link rel="stylesheet" href="../assets/fonts/tabler-icons.min.css" />
+  <link rel="stylesheet" href="../assets/fonts/feather.css" />
+  <link rel="stylesheet" href="../assets/fonts/fontawesome.css" />
+  <link rel="stylesheet" href="../assets/fonts/material.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
+</head>
+
+<body>
+  <div class="loader-bg fixed inset-0 bg-white z-[1034]">
+    <div class="loader-track h-[5px] w-full inline-block absolute overflow-hidden top-0">
+      <div class="loader-fill w-[300px] h-[5px] bg-primary-500 absolute top-0 left-0 animate-[hitZak_0.6s_ease-in-out_infinite_alternate]"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <nav class="pc-sidebar">
+    <div class="navbar-wrapper">
+      <div class="m-header flex items-center py-4 px-6 h-header-height">
+        <a href="../index.html" class="b-brand flex items-center gap-3">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="../assets/images/shadow_link_dark.svg"
+              style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+          </div>
+        </a>
+      </div>
+      <div class="navbar-content py-2.5">
+        <ul class="pc-navbar">
+          <li class="pc-item pc-caption"><label>Navigation</label></li>
+          <li class="pc-item"><a href="../index.html" class="pc-link"><span class="pc-micon"><i data-feather="home"></i></span><span class="pc-mtext">Dashboard</span></a></li>
+          <li class="pc-item pc-caption"><label>Other</label></li>
+          <li class="pc-item"><a href="news.html" class="pc-link"><span class="pc-micon"><i data-feather="activity"></i></span><span class="pc-mtext">News</span></a></li>
+          <li class="pc-item"><a href="support.html" class="pc-link"><span class="pc-micon"><i data-feather="help-circle"></i></span><span class="pc-mtext">Support</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="pc-header">
+    <div class="header-wrapper flex max-sm:px-[15px] px-[25px] grow">
+      <div class="me-auto pc-mob-drp">
+        <ul class="inline-flex *:min-h-header-height *:inline-flex *:items-center">
+          <li class="pc-h-item pc-sidebar-collapse max-lg:hidden lg:inline-flex">
+            <a href="#" class="pc-head-link ltr:!ml-0 rtl:!mr-0" id="sidebar-hide">
+              <i data-feather="menu"></i>
+            </a>
+          </li>
+          <li class="pc-h-item pc-sidebar-popup lg:hidden">
+            <a href="#" class="pc-head-link ltr:!ml-0 rtl:!mr-0" id="mobile-collapse">
+              <i data-feather="menu"></i>
+            </a>
+          </li>
+          <li class="dropdown pc-h-item">
+            <a class="pc-head-link dropdown-toggle me-0" data-pc-toggle="dropdown" href="#" role="button"
+              aria-haspopup="false" aria-expanded="false">
+              <i data-feather="search"></i>
+            </a>
+            <div class="dropdown-menu pc-h-dropdown drp-search">
+              <form class="px-2 py-1">
+                <input type="search" class="form-control !border-0 !shadow-none" placeholder="Search here. . ." />
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="ms-auto">
+        <ul class="inline-flex *:min-h-header-height *:inline-flex *:items-center">
+
+          <!-- Theme -->
+          <li class="dropdown pc-h-item">
+            <a class="pc-head-link dropdown-toggle me-0" data-pc-toggle="dropdown" href="#" role="button"
+              aria-haspopup="true" aria-expanded="false">
+              <i data-feather="sun"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end pc-h-dropdown">
+              <a href="#!" class="dropdown-item" onclick="layout_change('dark')"><i data-feather="moon"></i><span>Dark</span></a>
+              <a href="#!" class="dropdown-item" onclick="layout_change('light')"><i data-feather="sun"></i><span>Light</span></a>
+              <a href="#!" class="dropdown-item" onclick="layout_change_default()"><i data-feather="settings"></i><span>Default</span></a>
+            </div>
+          </li>
+
+          <!-- Settings -->
+          <li class="dropdown pc-h-item">
+            <a class="pc-head-link dropdown-toggle me-0" data-pc-toggle="dropdown" href="#" role="button"
+              aria-haspopup="true" aria-expanded="false">
+              <i data-feather="settings"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end pc-h-dropdown">
+              <a href="my_profile.html" class="dropdown-item"><i class="ti ti-user"></i><span>My Account</span></a>
+              <a href="support.html" class="dropdown-item"><i class="ti ti-headset"></i><span>Support</span></a>
+            </div>
+          </li>
+
+          <!-- Profile -->
+          <li class="dropdown pc-h-item header-user-profile">
+            <a class="pc-head-link dropdown-toggle" data-pc-toggle="dropdown" href="#" role="button"
+              aria-haspopup="true" aria-expanded="false">
+              <i data-feather="user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown p-2 overflow-hidden">
+              <div class="dropdown-header flex items-center justify-between py-4 px-5 bg-primary-500">
+                <div class="flex mb-1 items-center">
+                  <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="w-10 rounded-full" />
+                  <div class="ms-3">
+                    <h6 class="mb-1 text-white">Team 9</h6>
+                    <span class="text-white">team9@akm.az</span>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-body py-4 px-5">
+                <a href="../pages/login-v1.html" class="btn btn-primary w-full">Logout</a>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="pc-container">
+    <div class="pc-content">
+      <div class="page-header">
+        <div class="page-block">
+          <div class="page-header-title">
+            <h5 class="mb-0 font-medium">News</h5>
+          </div>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Other</a></li>
+            <li class="breadcrumb-item active">News</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- News Cards Grid -->
+      <div class="grid grid-cols-12 gap-6 mt-4" id="news-feed">
+        <!-- Dynamically filled via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="pc-footer">
+    <div class="footer-wrapper container-fluid mx-10">
+      <div class="col-span-12 text-right my-1">
+        <p class="inline-block">Created by Team 9</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../assets/js/plugins/simplebar.min.js"></script>
+  <script src="../assets/js/plugins/popper.min.js"></script>
+  <script src="../assets/js/icon/custom-icon.js"></script>
+  <script src="../assets/js/plugins/feather.min.js"></script>
+  <script src="../assets/js/component.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const container = document.getElementById("news-feed");
+
+      try {
+        const response = await fetch('/api/news');
+        const newsList = await response.json();
+        container.innerHTML = '';
+
+        newsList.forEach(news => {
+          const card = document.createElement('div');
+          card.className = 'col-span-12 md:col-span-6 xl:col-span-4';
+          card.innerHTML = `
+            <div class="card">
+              <div class="card-body">
+                <h5 class="font-semibold mb-1">${news.title}</h5>
+                <p class="text-sm text-gray-600 mb-2">${news.summary}</p>
+                <p class="text-xs text-gray-400">📅 ${news.date}</p>
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (error) {
+        container.innerHTML = "<p class='text-red-600'>⚠️ Failed to load news.</p>";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
