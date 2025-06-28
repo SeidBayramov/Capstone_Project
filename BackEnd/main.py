@@ -2,10 +2,11 @@ import os
 import re
 import random
 import string
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 # Flask Setup
 app = Flask(
@@ -28,15 +29,21 @@ app.config['MAIL_DEFAULT_SENDER'] = "seidbayramovpb25@gmail.com"
 # Initialize
 db = SQLAlchemy(app)
 mail = Mail(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login_form'
 
 # User Model
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # OTP Generator
 def generate_otp(length=6):
@@ -45,6 +52,7 @@ def generate_otp(length=6):
 # ------------------ ROUTES ------------------ #
 
 @app.route('/')
+@login_required
 def home():
     return render_template('dashboard/index.html')
 
@@ -112,7 +120,7 @@ def verify():
                 db.session.commit()
                 session.pop('otp', None)
                 session.pop('temp_user', None)
-                session['email'] = user.email
+                login_user(user)
                 flash("Registration successful!", "success")
                 return redirect(url_for('home'))
         flash("Invalid OTP.", "danger")
@@ -141,9 +149,17 @@ def login():
         flash("Account not verified. Please check your email for OTP.", "warning")
         return redirect(url_for('login_form'))
 
-    session['email'] = user.email
+    login_user(user)
     flash("Login successful!", "success")
     return redirect(url_for('home'))
+
+# ------------------ LOGOUT ------------------ #
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out successfully.", "info")
+    return redirect(url_for('login_form'))
 
 # ------------------ FALLBACK FOR STATIC ------------------ #
 @app.route('/<path:filename>')

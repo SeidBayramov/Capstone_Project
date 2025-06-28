@@ -1,16 +1,25 @@
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
   <head>
     {% set title = "Welcome" %}
     {% include 'layouts/head-page-meta.html' %}
     {% include 'layouts/head-css.html' %}
   </head>
-  <!-- [Head] end -->
-
-  <!-- [Body] Start -->
   <body>
     {% include 'layouts/layout-vertical.html' %}
+
+    <!-- ✅ Flash mesajlar -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="max-w-xl mx-auto mt-4">
+          {% for category, message in messages %}
+            <div class="rounded-lg text-sm text-center p-3 mb-3 {{ 'bg-green-100 text-green-700' if category=='success' else 'bg-red-100 text-red-700' }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
     <!-- [ Main Content ] start -->
     <div class="pc-container">
@@ -24,7 +33,7 @@
           <div class="col-span-12 xl:col-span-8">
             <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
               <h1 class="text-3xl font-bold text-primary-600 mb-4 leading-snug">
-                Welcome to <span class="text-primary-700">ShadowLink</span> Platform! 👋
+                Welcome to <span class="text-primary-700">ShadowLink</span> Platform, <span class="text-black dark:text-white">{{ current_user.first_name }}</span>! 👋
               </h1>
               <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                 This is your centralized dashboard for navigating insights, managing your profile,
@@ -84,27 +93,18 @@
           <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">TIPlatform Overview</h2>
           <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
             In today’s rapidly evolving cyber threat landscape, both offensive (Red Team) and defensive (Blue Team) operations require access to reliable, timely, and contextual threat intelligence.
-            However, most platforms available in the market tend to cater to only one side of the cybersecurity spectrum, often leaving teams working in silos with fragmented insights.
           </p>
           <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-            To address this gap, our project introduces TIPlatform – a web-based threat intelligence environment designed to unify the efforts of Red and Blue teams through a single, collaborative interface.
-            This platform allows users to input basic identifiers (such as names, domains, or IP addresses) and automatically retrieves correlated threat intelligence from integrated data sources.
+            TIPlatform introduces a collaborative interface designed for both Red and Blue teams to work together based on real-time indicators.
           </p>
           <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-            Red Team professionals can leverage the platform to simulate realistic attack scenarios based on live threat feeds and exposure analysis. Meanwhile, Blue Team analysts can use the same tool to investigate suspicious activity, enrich alerts, and validate incidents with real-world data.
-          </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-            By bringing both teams onto a shared platform, TIPlatform fosters collaboration, speed, and operational efficiency. It aligns with Purple Team strategies by allowing both offensive and defensive sides to work with the same intelligence context, ultimately leading to stronger security posture and quicker decision-making.
-          </p>
-          <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-            The platform has been designed with scalability and modularity in mind. While the core system focuses on data gathering and visualization, future versions may include dark web insights, AI-driven prioritization, and incident simulation features.
+            The platform is scalable, modular, and designed to unify offensive simulation and defensive readiness.
           </p>
           <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
             TIPlatform is more than just a tool—it's a bridge between proactive offense and responsive defense.
           </p>
         </div>
         <!-- [ Overview Section ] end -->
-
       </div>
     </div>
     <!-- [ Main Content ] end -->
@@ -112,5 +112,5 @@
     {% include 'layouts/footer-block.html' %}
     {% include 'layouts/footer-js.html' %}
   </body>
-  <!-- [Body] end -->
 </html>
+
