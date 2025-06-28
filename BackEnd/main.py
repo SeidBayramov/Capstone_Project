@@ -2,7 +2,6 @@ import os
 import re
 import random
 import string
-from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,7 +14,7 @@ app = Flask(
     static_folder=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'dist', 'assets')
 )
 
-# Konfiqurasiya (dotenv olmadan birbaşa dəyərlər)
+# Birbaşa konfiqurasiya (dotenv olmadan)
 app.config['SECRET_KEY'] = "c189ffd8d660e2c85caedfb6986dd2b4"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -40,104 +39,133 @@ class User(db.Model):
     password = db.Column(db.String(120))
     is_verified = db.Column(db.Boolean, default=False)
 
-def generate_otp():
-    return ''.join(random.choices(string.digits, k=6))
+# OTP generator
+def generate_otp(length=6):
+    return ''.join(random.choices(string.digits, k=length))
 
+# Ana səhifə
 @app.route('/')
 def home():
-    return 'Home Page - Welcome!'
+    return render_template('dashboard/index.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-
-        if User.query.filter_by(email=email).first():
-            flash('Email already registered.', 'warning')
-            return redirect(url_for('register'))
-
-        hashed_password = generate_password_hash(password)
-        new_user = User(email=email, password=hashed_password, first_name=first_name, last_name=last_name)
-        db.session.add(new_user)
-        db.session.commit()
-
-        otp = generate_otp()
-        session['email'] = email
-        session['otp'] = otp
-        session['otp_expires_at'] = (datetime.utcnow() + timedelta(minutes=1)).isoformat()
-
-        try:
-            msg = Message('Your OTP Code', recipients=[email])
-            msg.body = f"Your OTP code is: {otp}"
-            msg.html = f"""
-                <h2>ShadowLink OTP</h2>
-                <p>Your verification code is:</p>
-                <div style='font-size:24px; font-weight:bold; color:#27ae60;'>{otp}</div>
-                <p>This code will expire in 1 minute.</p>
-            """
-            mail.send(msg)
-        except Exception as e:
-            print("Email send error:", str(e))
-            flash("Error sending email.", "danger")
-
-        return redirect(url_for('verify'))
-
+# Qeydiyyat formu (GET)
+@app.route('/register', methods=['GET'])
+def register_form():
     return render_template('auth-pages/register.html')
 
+# Qeydiyyat (POST)
+@app.route('/register', methods=['POST'])
+def register():
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Parol gücünü yoxla
+    pattern = r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+    if not re.match(pattern, password):
+        flash("Password must contain uppercase, digit, special char and be at least 8 chars.", "danger")
+        return redirect(url_for('register_form'))
+
+    if User.query.filter_by(email=email).first():
+        flash("This email is already registered.", "warning")
+        return redirect(url_for('register_form'))
+
+    hashed_password = generate_password_hash(password)
+    user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+
+    otp = generate_otp()
+    session['email'] = email
+    session['otp'] = otp
+
+    # Email göndər
+    try:
+        msg = Message(
+            subject='Your Verification Code',
+            recipients=[email],
+            body=f"Your OTP code is: {otp}"
+        )
+        mail.send(msg)
+        print(f"[INFO] OTP {otp} sent to {email}")
+    except Exception as e:
+        print("[ERROR] Email error:", str(e))
+        flash("Email sending failed. Try again.", "danger")
+        return redirect(url_for('register_form'))
+
+    return redirect(url_for('verify'))
+
+# OTP Doğrulama
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
     if request.method == 'POST':
         input_otp = request.form.get('otp')
-        otp = session.get('otp')
-        expires_at = session.get('otp_expires_at')
-
-        if not otp or not expires_at or datetime.utcnow() > datetime.fromisoformat(expires_at):
-            flash("OTP expired. Please request a new one.", "warning")
-            return redirect(url_for('resend_otp'))
-
-        if input_otp == otp:
+        if input_otp == session.get('otp'):
             user = User.query.filter_by(email=session.get('email')).first()
             if user:
                 user.is_verified = True
                 db.session.commit()
                 session.pop('otp', None)
-                session.pop('otp_expires_at', None)
                 return redirect(url_for('home'))
-        else:
-            flash("Invalid OTP.", "danger")
-
+        flash("Invalid OTP.", "danger")
     return render_template('auth-pages/verify.html')
 
-@app.route('/resend-otp')
-def resend_otp():
-    email = session.get('email')
-    if not email:
-        flash("Session expired. Please register again.", "warning")
-        return redirect(url_for('register'))
-
-    otp = generate_otp()
-    session['otp'] = otp
-    session['otp_expires_at'] = (datetime.utcnow() + timedelta(minutes=1)).isoformat()
-
+# Test email
+@app.route('/test-email')
+def test_email():
     try:
-        msg = Message('Resent OTP Code', recipients=[email])
-        msg.body = f"Your new OTP code is: {otp}"
-        msg.html = f"""
-            <h2>ShadowLink OTP Resent</h2>
-            <p>Your new verification code is:</p>
-            <div style='font-size:24px; font-weight:bold; color:#27ae60;'>{otp}</div>
-            <p>This code will expire in 1 minute.</p>
-        """
+        msg = Message(
+            subject="Test Email",
+            recipients=["seidbayramli2004@gmail.com"],
+            body="Bu test emailidir."
+        )
         mail.send(msg)
-        flash("New OTP code sent!", "success")
+        return "Email uğurla göndərildi!"
     except Exception as e:
-        print("Resend email error:", str(e))
-        flash("Failed to resend OTP. Try again later.", "danger")
+        return f"Email göndərilmədi: {str(e)}"
 
-    return redirect(url_for('verify'))
+# Giriş
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    user = User.query.filter_by(email=email).first()
 
+    if user and check_password_hash(user.password, password):
+        if user.is_verified:
+            session['email'] = user.email
+            return redirect(url_for('home'))
+        else:
+            otp = generate_otp()
+            session['otp'] = otp
+            try:
+                msg = Message(
+                    subject='Your Login OTP Code',
+                    recipients=[email],
+                    body=f"Your login verification code is: {otp}"
+                )
+                mail.send(msg)
+                print(f"[INFO] Login OTP {otp} sent to {email}")
+            except Exception as e:
+                print("[ERROR] Login OTP email failed:", str(e))
+                flash("Could not send login OTP.", "danger")
+                return redirect(url_for('login'))
+            return redirect(url_for('verify'))
+    else:
+        flash("Invalid credentials.", "danger")
+        return redirect(url_for('login'))
+
+# Statik fayllar
+@app.route('/<path:filename>')
+def serve_static(filename):
+    full_path = os.path.join(app.template_folder, filename)
+    if os.path.exists(full_path):
+        return render_template(filename)
+    return "Not Found", 404
+
+# App işlədilir
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, port=5001)
