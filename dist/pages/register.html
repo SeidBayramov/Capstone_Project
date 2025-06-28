@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
 <head>
-  <title>Register Page</title>
+  <title>Register</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="description" content="Register Page" />
   <meta name="author" content="ShadowLink" />
+
   <link rel="icon" href="../assets/images/shadow_link_dark.svg" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/fonts/phosphor/duotone/style.css" />
@@ -15,22 +16,14 @@
   <link rel="stylesheet" href="../assets/fonts/fontawesome.css" />
   <link rel="stylesheet" href="../assets/fonts/material.css" />
   <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <!-- Loader -->
-  <div class="loader-bg fixed inset-0 bg-white dark:bg-themedark-cardbg z-[1034]">
-    <div class="loader-track h-[5px] w-full inline-block absolute overflow-hidden top-0">
-      <div class="loader-fill w-[300px] h-[5px] bg-primary-500 absolute top-0 left-0 animate-[hitZak_0.6s_ease-in-out_infinite_alternate]"></div>
-    </div>
-  </div>
-
-  <!-- Main Content -->
   <div class="auth-main relative">
     <div class="auth-wrapper v1 flex items-center w-full h-full min-h-screen">
       <div class="auth-form flex items-center justify-center grow flex-col min-h-screen relative p-6">
         <div class="w-full max-w-[350px] relative">
-          <!-- Background animation -->
           <div class="auth-bg">
             <span class="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] block rounded-full bg-theme-bg-1 animate-[floating_7s_infinite]"></span>
             <span class="absolute top-[150px] right-[-150px] w-5 h-5 block rounded-full bg-primary-500 animate-[floating_9s_infinite]"></span>
@@ -42,42 +35,54 @@
             <div class="card-body !p-10">
               <div class="text-center mb-8">
                 <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px; padding-bottom: 15px;">
-                  <img src="../assets/images/shadow_link_dark.svg"
-                    style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);" />
+                  <img src="../assets/images/shadow_link_dark.svg" style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);" />
                 </div>
               </div>
 
               <h4 class="text-center font-medium mb-4">Sign up</h4>
 
-              <form id="registerForm">
+              <!-- Flash message (server-side error display) -->
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="text-red-500 text-sm text-center mb-4">{{ message }}</div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+
+              <form id="registerForm" method="POST" action="/register">
                 <div class="grid grid-cols-12 gap-3 mb-3">
                   <div class="col-span-12 sm:col-span-6">
-                    <input type="text" class="form-control" id="firstName" placeholder="First Name" required />
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name" required />
                   </div>
                   <div class="col-span-12 sm:col-span-6">
-                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" required />
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" required />
                   </div>
                 </div>
 
                 <div class="mb-3">
-                  <input type="email" class="form-control" id="emailInput" placeholder="Email Address" required />
-                  <div id="emailError" class="text-red-500 text-sm mt-2" style="display: none;">Please enter a valid email address.</div>
-                </div>
-
-                <div class="mb-3">
-                  <input type="password" class="form-control" id="passwordInput" placeholder="Password" required />
-                  <div id="passwordStrengthError" class="text-red-500 text-sm mt-2" style="display: none;">
-                    Password must be at least 8 characters, include uppercase, number and special character.
+                  <input type="email" class="form-control" name="email" id="emailInput" placeholder="Email Address" required />
+                  <div id="emailError" class="text-red-500 text-sm mt-2" style="display: none;">
+                    Please enter a valid email address.
                   </div>
                 </div>
 
                 <div class="mb-3">
+                  <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Password" required />
+                  <div id="strengthError" class="text-red-500 text-sm mt-2" style="display: none;">
+                    Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character.
+                  </div>
+                </div>
+
+                <div class="mb-4">
                   <input type="password" class="form-control" id="confirmPasswordInput" placeholder="Confirm Password" required />
-                  <div id="passwordMatchError" class="text-red-500 text-sm mt-2" style="display: none;">Passwords do not match.</div>
+                  <div id="passwordError" class="text-red-500 text-sm mt-2" style="display: none;">
+                    Passwords do not match.
+                  </div>
                 </div>
 
-                <div class="text-center mt-4">
-                  <button type="submit" class="btn btn-primary w-full">Sign up</button>
+                <div class="mt-4 text-center">
+                  <button type="submit" class="btn btn-primary mx-auto shadow-2xl">Sign up</button>
                 </div>
               </form>
 
@@ -88,64 +93,58 @@
 
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="../assets/js/plugins/simplebar.min.js"></script>
-  <script src="../assets/js/plugins/popper.min.js"></script>
-  <script src="../assets/js/icon/custom-icon.js"></script>
-  <script src="../assets/js/plugins/feather.min.js"></script>
-  <script src="../assets/js/component.js"></script>
-  <script src="../assets/js/theme.js"></script>
-  <script src="../assets/js/script.js"></script>
-
-  <!-- Form validation -->
   <script>
     const form = document.getElementById("registerForm");
-    const email = document.getElementById("emailInput");
-    const pass = document.getElementById("passwordInput");
-    const confirm = document.getElementById("confirmPasswordInput");
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const confirmPasswordInput = document.getElementById("confirmPasswordInput");
     const emailError = document.getElementById("emailError");
-    const passStrengthError = document.getElementById("passwordStrengthError");
-    const passMatchError = document.getElementById("passwordMatchError");
-
-    function isPasswordStrong(pw) {
-      const strongRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/;
-      return strongRegex.test(pw);
-    }
+    const passwordError = document.getElementById("passwordError");
+    const strengthError = document.getElementById("strengthError");
 
     form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      let isValid = true;
+      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?-=&])[A-Za-z\\d@$!%*?&]{8,}$/;
+      let valid = true;
 
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      // Email yoxlaması
+      if (!emailRegex.test(emailInput.value)) {
         emailError.style.display = "block";
-        isValid = false;
+        valid = false;
       } else {
         emailError.style.display = "none";
       }
 
-      if (!isPasswordStrong(pass.value)) {
-        passStrengthError.style.display = "block";
-        isValid = false;
+      // Parol gücü yoxlaması
+      if (!passwordRegex.test(passwordInput.value)) {
+        strengthError.style.display = "block";
+        valid = false;
       } else {
-        passStrengthError.style.display = "none";
+        strengthError.style.display = "none";
       }
 
-      if (pass.value !== confirm.value) {
-        passMatchError.style.display = "block";
-        isValid = false;
+      // Parol bərabərliyi yoxlaması
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        passwordError.style.display = "block";
+        valid = false;
       } else {
-        passMatchError.style.display = "none";
+        passwordError.style.display = "none";
       }
 
-      if (isValid) {
-        window.location.href = "verify.html";
+      // Əgər səhv varsa, formu göndərmə
+      if (!valid) {
+        e.preventDefault();
+      } else {
+        form.reset(); // uğurlu olduqda təmizlə
       }
     });
+
   </script>
 </body>
 </html>

@@ -48,25 +48,38 @@
               <h4 class="text-center font-medium mb-4">Verify your login</h4>
               <p class="text-center text-muted mb-4 text-sm">Please enter the 6-digit code sent to your email.</p>
 
-              <div class="mb-3">
-                <input type="text"
-                       class="form-control text-center tracking-widest text-lg"
-                       maxlength="6"
-                       placeholder="______"
-                       id="otpInput"
-                       inputmode="numeric"
-                       pattern="[0-9]*" />
-                <div id="otpError" class="text-red-500 text-sm mt-2 text-center" style="display: none;">
-                  Please enter a valid 6-digit code.
-                </div>
-              </div>
+              <!-- Flash mesajlar -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="text-center mb-4 text-sm text-{{ 'green-500' if category == 'success' else 'red-500' }}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
 
-              <div class="mt-4 text-center">
-                <button type="button" class="btn btn-primary mx-auto shadow-2xl" id="verifyBtn">Verify</button>
-              </div>
+            
+    <form method="POST" action="/verify">
+      <input
+        type="text"
+        name="otp"
+        maxlength="6"
+        pattern="[0-9]{6}"
+        required
+        placeholder="______"
+        style="width: 100%; padding: 12px; font-size: 20px; text-align: center; letter-spacing: 6px; margin-top: 20px;"
+      />
 
+      <button
+        type="submit"
+        style="margin-top: 25px; width: 100%; padding: 10px; background-color: #2C7BE5; color: white; border: none; font-size: 16px; border-radius: 6px;"
+      >
+        Verify
+      </button>
+    </form>
               <div class="text-center mt-4">
-                <a href="login-v1.html" class="text-primary-500 text-sm">Back to Login</a>
+                <a href="/register" class="text-primary-500 text-sm">Back to Register</a>
               </div>
             </div>
           </div>
@@ -85,12 +98,9 @@
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/script.js"></script>
 
-  <!-- OTP validation -->
+  <!-- OTP input üçün rəqəm yoxlaması -->
   <script>
     const otpInput = document.getElementById("otpInput");
-    const otpError = document.getElementById("otpError");
-
-    // Yalnız rəqəmlərə icazə ver
     otpInput.addEventListener("keydown", function (e) {
       if (
         !(
@@ -103,17 +113,6 @@
         )
       ) {
         e.preventDefault();
-      }
-    });
-
-    document.getElementById("verifyBtn").addEventListener("click", function () {
-      const otp = otpInput.value.trim();
-      if (/^\d{6}$/.test(otp)) {
-        otpError.style.display = "none";
-        alert("OTP verified! (Backend yoxlanışı burada olacaq)");
-        // fetch() ilə backendə göndərilə bilər
-      } else {
-        otpError.style.display = "block";
       }
     });
   </script>

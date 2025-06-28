@@ -1,4 +1,4 @@
-<!-- Yekun Login Sehifesi (struktur qorunaraq, sosial media login + MFA yönləndirmə ilə) -->
+<!-- Login Page with autocomplete off -->
 <!doctype html>
 <html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
 <head>
@@ -8,7 +8,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="description" content="Login Page" />
   <meta name="author" content="ShadowLink" />
-
   <link rel="icon" href="../assets/images/shadow_link_dark.svg" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/fonts/phosphor/duotone/style.css" />
@@ -49,11 +48,9 @@
 
               <h4 class="text-center font-medium mb-4">Login</h4>
 
-              <div class="text-center text-muted my-4"></div>
-
               <!-- Email input -->
               <div class="mb-3">
-                <input type="email" class="form-control" id="emailInput" placeholder="Email Address" required />
+                <input type="email" class="form-control" id="emailInput" placeholder="Email Address" required autocomplete="off" />
                 <div id="emailError" class="text-red-500 text-sm mt-2" style="display: none;">
                   Please enter a valid email address.
                 </div>
@@ -61,7 +58,7 @@
 
               <!-- Password input -->
               <div class="mb-4">
-                <input type="password" class="form-control" id="passwordInput" placeholder="Password" required />
+                <input type="password" class="form-control" id="passwordInput" placeholder="Password" required autocomplete="off" />
                 <div id="passwordError" class="text-red-500 text-sm mt-2" style="display: none;">
                   Please enter your password.
                 </div>
@@ -69,7 +66,7 @@
 
               <div class="flex mt-1 justify-between items-center flex-wrap">
                 <div class="form-check">
-                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked />
+                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" />
                   <label class="form-check-label text-muted" for="customCheckc1">Remember me?</label>
                 </div>
               </div>
@@ -128,7 +125,7 @@
       }
 
       if (valid) {
-        window.location.href = "verify.html";
+        window.location.href = "verify.html"; // MFA yönləndirmə
       }
     });
   </script>
