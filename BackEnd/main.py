@@ -7,14 +7,14 @@ from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 
-# Flask App Setup
+# Flask Setup
 app = Flask(
     __name__,
     template_folder=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'dist'),
     static_folder=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'dist', 'assets')
 )
 
-# Configuration
+# Config
 app.config['SECRET_KEY'] = "c189ffd8d660e2c85caedfb6986dd2b4"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -25,7 +25,7 @@ app.config['MAIL_USERNAME'] = "seidbayramovpb25@gmail.com"
 app.config['MAIL_PASSWORD'] = "ykamyydefqthtbgz"
 app.config['MAIL_DEFAULT_SENDER'] = "seidbayramovpb25@gmail.com"
 
-# Initialize extensions
+# Initialize
 db = SQLAlchemy(app)
 mail = Mail(app)
 
@@ -34,8 +34,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)
 
 # OTP Generator
@@ -44,17 +44,15 @@ def generate_otp(length=6):
 
 # ------------------ ROUTES ------------------ #
 
-# Home Page (Dashboard)
 @app.route('/')
 def home():
     return render_template('dashboard/index.html')
 
-# Register Form (GET)
+# ------------------ REGISTER ------------------ #
 @app.route('/register', methods=['GET'])
 def register_form():
-    return render_template('pages/register.html')  # Correct path
+    return render_template('pages/register.html')
 
-# Register (POST)
 @app.route('/register', methods=['POST'])
 def register():
     first_name = request.form.get('first_name')
@@ -95,6 +93,7 @@ def register():
 
     return redirect(url_for('verify'))
 
+# ------------------ VERIFY ------------------ #
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
     if request.method == 'POST':
@@ -119,56 +118,34 @@ def verify():
         flash("Invalid OTP.", "danger")
     return render_template('pages/verify.html')
 
+# ------------------ LOGIN ------------------ #
+@app.route('/login', methods=['GET'])
+def login_form():
+    return render_template('pages/login-v1.html')
 
-# Login (POST)
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
     user = User.query.filter_by(email=email).first()
 
-    if user and check_password_hash(user.password, password):
-        if user.is_verified:
-            session['email'] = user.email
-            return redirect(url_for('home'))
-        else:
-            otp = generate_otp()
-            session['otp'] = otp
-            session['temp_user'] = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'password': user.password
-            }
-            try:
-                msg = Message(
-                    subject='Your Login OTP Code',
-                    recipients=[email],
-                    body=f"Your login verification code is: {otp}"
-                )
-                mail.send(msg)
-            except Exception as e:
-                flash("Failed to send login OTP.")
-                return redirect(url_for('register_form'))
-            return redirect(url_for('verify'))
-    flash("Invalid credentials.")
-    return redirect(url_for('register_form'))
+    if not user:
+        flash("User not found. Please register.", "danger")
+        return redirect(url_for('login_form'))
 
-# Email Test Endpoint (Optional)
-@app.route('/test-email')
-def test_email():
-    try:
-        msg = Message(
-            subject="Test Email",
-            recipients=["seidbayramli2004@gmail.com"],
-            body="Bu test emailidir."
-        )
-        mail.send(msg)
-        return "Email sent successfully!"
-    except Exception as e:
-        return f"Failed to send email: {str(e)}"
+    if not check_password_hash(user.password, password):
+        flash("Invalid password. Please try again.", "danger")
+        return redirect(url_for('login_form'))
 
-# Static files
+    if not user.is_verified:
+        flash("Account not verified. Please check your email for OTP.", "warning")
+        return redirect(url_for('login_form'))
+
+    session['email'] = user.email
+    flash("Login successful!", "success")
+    return redirect(url_for('home'))
+
+# ------------------ FALLBACK FOR STATIC ------------------ #
 @app.route('/<path:filename>')
 def serve_static(filename):
     full_path = os.path.join(app.template_folder, filename)
@@ -176,7 +153,7 @@ def serve_static(filename):
         return render_template(filename)
     return "Not Found", 404
 
-# App Runner
+# ------------------ RUN APP ------------------ #
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
