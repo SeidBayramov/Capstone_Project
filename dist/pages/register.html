@@ -40,15 +40,17 @@
               </div>
 
               <h4 class="text-center font-medium mb-4">Sign up</h4>
-
-              <!-- Flash message (server-side error display) -->
-              {% with messages = get_flashed_messages() %}
+              {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                  {% for message in messages %}
-                    <div class="text-red-500 text-sm text-center mb-4">{{ message }}</div>
+                  {% for category, message in messages %}
+                    <div class="text-center text-sm mb-4 {% if category == 'success' %}text-green-500{% else %}text-red-500{% endif %}">
+                      {{ message }}
+                    </div>
                   {% endfor %}
                 {% endif %}
               {% endwith %}
+    
+
 
               <form id="registerForm" method="POST" action="/register">
                 <div class="grid grid-cols-12 gap-3 mb-3">
