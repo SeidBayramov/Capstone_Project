@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
 <head>
-  <title>Support</title>
+  <title>MITRE ATT&CK®</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="Support Page - ShadowLink Platform" />
+  <meta name="description" content="MITRE ATT&CK® Tactics Overview" />
   <meta name="author" content="ShadowLink Team 9" />
   <link rel="icon" href="../assets/images/shadow_link_symbol.svg" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -18,40 +18,38 @@
 </head>
 
 <body>
-  <!-- Loader -->
-  <div class="loader-bg fixed inset-0 bg-white z-[1034]">
+  <!-- Pre-loader -->
+  <div class="loader-bg fixed inset-0 bg-white dark:bg-themedark-cardbg z-[1034]">
     <div class="loader-track h-[5px] w-full inline-block absolute overflow-hidden top-0">
       <div class="loader-fill w-[300px] h-[5px] bg-primary-500 absolute top-0 left-0 animate-[hitZak_0.6s_ease-in-out_infinite_alternate]"></div>
     </div>
   </div>
 
   <!-- Sidebar -->
-<nav class="pc-sidebar">
-  <div class="navbar-wrapper">
-    <div class="m-header flex items-center py-4 px-6 h-header-height">
-      <a href="../index.html" class="b-brand flex items-center gap-3">
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <img src="../assets/images/shadow_link_dark.svg"
-            style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
-        </div>
-      </a>
+  <nav class="pc-sidebar">
+    <div class="navbar-wrapper">
+      <div class="m-header flex items-center py-4 px-6 h-header-height">
+        <a href="../index.html" class="b-brand flex items-center gap-3">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="../assets/images/shadow_link_dark.svg" style="width: 80px; background-color: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+          </div>
+        </a>
+      </div>
+      <div class="navbar-content py-2.5">
+        <ul class="pc-navbar">
+          <li class="pc-item pc-caption"><label>Navigation</label></li>
+          <li class="pc-item"><a href="../index.html" class="pc-link"><span class="pc-micon"><i data-feather="home"></i></span><span class="pc-mtext">Dashboard</span></a></li>
+
+          <li class="pc-item pc-caption"><label>MITRE</label><i data-feather="shield"></i></li>
+          <li class="pc-item"><a href="mitre.html" class="pc-link"><span class="pc-micon"><i data-feather="target"></i></span><span class="pc-mtext">MITRE ATT&CK®</span></a></li>
+
+          <li class="pc-item pc-caption"><label>Other</label></li>
+          <li class="pc-item"><a href="news.html" class="pc-link"><span class="pc-micon"><i data-feather="activity"></i></span><span class="pc-mtext">News</span></a></li>
+          <li class="pc-item"><a href="support.html" class="pc-link"><span class="pc-micon"><i data-feather="help-circle"></i></span><span class="pc-mtext">Support</span></a></li>
+        </ul>
+      </div>
     </div>
-    <div class="navbar-content py-2.5">
-      <ul class="pc-navbar">
-        <li class="pc-item pc-caption"><label>Navigation</label></li>
-        <li class="pc-item"><a href="../index.html" class="pc-link"><span class="pc-micon"><i data-feather="home"></i></span><span class="pc-mtext">Dashboard</span></a></li>
-
-        <li class="pc-item pc-caption"><label>MITRE</label><i data-feather="shield"></i></li>
-        <li class="pc-item"><a href="mitre.html" class="pc-link"><span class="pc-micon"><i data-feather="target"></i></span><span class="pc-mtext">MITRE ATT&CK®</span></a></li>
-
-        <li class="pc-item pc-caption"><label>Other</label></li>
-        <li class="pc-item"><a href="news.html" class="pc-link"><span class="pc-micon"><i data-feather="activity"></i></span><span class="pc-mtext">News</span></a></li>
-        <li class="pc-item"><a href="support.html" class="pc-link"><span class="pc-micon"><i data-feather="help-circle"></i></span><span class="pc-mtext">Support</span></a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
+  </nav>
 
   <!-- Header -->
   <header class="pc-header">
@@ -143,76 +141,29 @@
       <div class="page-header">
         <div class="page-block">
           <div class="page-header-title">
-            <h5 class="mb-0 font-medium">Support</h5>
+            <h5 class="mb-0 font-medium">MITRE ATT&CK®</h5>
           </div>
           <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Other</a></li>
-            <li class="breadcrumb-item active">Support</li>
+            <li class="breadcrumb-item"><a href="#">MITRE</a></li>
+            <li class="breadcrumb-item active">Overview</li>
           </ul>
         </div>
       </div>
 
-      <div class="grid grid-cols-12 gap-x-6">
+      <div class="grid grid-cols-12 gap-6 mt-4">
         <div class="col-span-12">
-          <!-- FAQ Section -->
-          <div class="card mt-6">
-            <div class="card-header">
-              <h5>Frequently Asked Questions</h5>
-            </div>
+          <div class="card">
             <div class="card-body">
-              <div class="space-y-4">
-                <details class="border rounded p-4">
-                  <summary class="cursor-pointer font-medium">How can I reset my password?</summary>
-                  <p class="mt-2 text-gray-600">Go to the login page and click “Forgot Password”. Instructions will be sent to your email.</p>
-                </details>
-                <details class="border rounded p-4">
-                  <summary class="cursor-pointer font-medium">Can I change my email address?</summary>
-                  <p class="mt-2 text-gray-600">Yes, you can update it from your profile settings once logged in.</p>
-                </details>
-              </div>
-            </div>
-          </div>
-
-          <!-- Contact Form -->
-          <div class="card mt-6">
-            <div class="card-header">
-              <h5>Contact Support</h5>
-            </div>
-            <div class="card-body">
-              <form id="supportForm">
-                <div class="mb-4">
-                  <label for="name" class="form-label">Full Name</label>
-                  <input type="text" class="form-control" id="name" placeholder="Your name" required />
-                </div>
-                <div class="mb-4">
-                  <label for="email" class="form-label">Email Address</label>
-                  <input type="email" class="form-control" id="email" placeholder="example@mail.com" required />
-                </div>
-                <div class="mb-4">
-                  <label for="message" class="form-label">Your Message</label>
-                  <textarea class="form-control" id="message" rows="4" placeholder="Describe your issue..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Additional Help -->
-          <div class="card mt-6">
-            <div class="card-header">
-              <h5>More Help</h5>
-            </div>
-            <div class="card-body">
-              <ul class="list-disc list-inside text-gray-700">
-                <li>Email us: <a href="mailto:support@shadowlink.com" class="text-primary-500">support@shadowlink.com</a></li>
-                <li>Telegram Group Support available soon</li>
-                <li>Documentation section will be launched in v2.0</li>
-              </ul>
+              <p class="text-sm text-gray-700">
+                MITRE ATT&CK® is a knowledge base of adversary tactics and techniques based on real-world observations.  
+                This page will include interactive scripts to help analyze and visualize threat behavior.
+              </p>
+              <!-- Script output will be displayed below -->
+              <div id="attack-results" class="mt-4"></div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -234,12 +185,10 @@
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/script.js"></script>
 
+  <!-- Future scripts for MITRE interaction -->
   <script>
-    document.getElementById("supportForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      alert("Your message has been submitted. We’ll get back to you soon.");
-      this.reset();
-    });
+    // Example placeholder
+    document.getElementById("attack-results").innerHTML = "<p class='text-blue-600'>MITRE script will run here...</p>";
   </script>
 </body>
 </html>
