@@ -2,11 +2,14 @@ import os
 import re
 import random
 import string
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+
+# External fetcher
+from news_fetcher11 import fetch_news
 
 # Flask Setup
 app = Flask(
@@ -149,6 +152,15 @@ def logout():
     logout_user()
     flash("Logged out.")
     return redirect('/login')
+
+# ------------------ API: News ------------------ #
+@app.route('/api/news', methods=['GET'])
+def get_news():
+    try:
+        news = fetch_news()
+        return jsonify(news)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ------------------ STATIC FALLBACK ------------------ #
 @app.route('/<path:filename>')
