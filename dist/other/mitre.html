@@ -151,7 +151,7 @@
   </header>
 
   <!-- Main Content -->
-  <div class="pc-container">
+<div class="pc-container">
     <div class="pc-content">
       <div class="page-header">
         <div class="page-block">
@@ -169,18 +169,19 @@
         <div class="col-span-12">
           <div class="card">
             <div class="card-body">
-              <p class="text-sm text-gray-700">
-                MITRE ATT&CK® is a knowledge base of adversary tactics and techniques based on real-world observations.  
-                This page will include interactive scripts to help analyze and visualize threat behavior.
+              <p class="text-sm text-gray-700 mb-3">
+                MITRE ATT&CK® is a knowledge base of adversary tactics and techniques based on real-world observations.
               </p>
-              <!-- Script output will be displayed below -->
-              <div id="attack-results" class="mt-4"></div>
+              <input type="text" id="search" placeholder="🔍 Search technique..." class="form-control my-3 w-full border border-gray-300 p-2 rounded" />
+              <div id="attack-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
 
   <!-- Footer -->
   <footer class="pc-footer">
@@ -201,9 +202,84 @@
   <script src="../assets/js/script.js"></script>
 
   <!-- Future scripts for MITRE interaction -->
-  <script>
-    // Example placeholder
-    document.getElementById("attack-results").innerHTML = "<p class='text-blue-600'>MITRE script will run here...</p>";
-  </script>
+<script>
+  const statusEl = document.getElementById("mitre-status");
+  const container = document.getElementById("attack-results");
+  const search = document.getElementById("search");
+
+  if (statusEl) {
+    statusEl.textContent = "⏳ Loading MITRE ATT&CK data...";
+  }
+
+  fetch("/api/mitre-live")
+    .then(res => res.text())
+    .then(text => {
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        if (statusEl) {
+          statusEl.innerHTML = `<span class="text-red-600">❌ JSON parse error: ${e.message}</span>`;
+        }
+        return;
+      }
+
+      if (!data || data.length === 0 || data.error) {
+        if (statusEl) {
+          statusEl.innerHTML = `<span class="text-red-600">❌ Error loading data: ${data.error || "No tactics found."}</span>`;
+        }
+        return;
+      }
+
+      if (statusEl) {
+        statusEl.textContent = "";
+      }
+
+      function render(dataToRender) {
+        container.innerHTML = "";
+        if (dataToRender.length === 0) {
+          container.innerHTML = `<p class="text-gray-500">🔍 No results match your search.</p>`;
+          return;
+        }
+
+        dataToRender.forEach(tactic => {
+          const card = document.createElement("div");
+          card.className = "bg-white rounded shadow p-4 border border-gray-200";
+          card.innerHTML = `
+            <h2 class="text-lg font-bold text-blue-700 mb-2">${tactic.tactic}</h2>
+            <ul class="list-disc ml-5 space-y-1">
+              ${tactic.techniques.map(t => `<li class="text-sm text-gray-700">${t}</li>`).join("")}
+            </ul>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      render(data);
+
+      if (search) {
+        search.addEventListener("input", () => {
+          const keyword = search.value.toLowerCase();
+          const filtered = data
+            .map(t => ({
+              tactic: t.tactic,
+              techniques: t.techniques.filter(tech => tech.toLowerCase().includes(keyword))
+            }))
+            .filter(t => t.techniques.length > 0);
+
+          render(filtered);
+        });
+      }
+    })
+    .catch(error => {
+      if (statusEl) {
+        statusEl.innerHTML = `<p class="text-red-600">❌ Failed to load MITRE data: ${error.message}</p>`;
+      }
+    });
+</script>
+
+
+
 </body>
 </html>
