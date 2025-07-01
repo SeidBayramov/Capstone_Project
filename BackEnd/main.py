@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from insta_checker import generate_usernames, check_instagram_user
 
 # External fetcher
 from news_fetcher11 import fetch_news
@@ -169,9 +170,36 @@ def serve_static(filename):
     if os.path.exists(full_path):
         return render_template(filename)
     return "Not Found", 404
+@app.route('/api/check_instagram', methods=['POST'])
+def check_instagram():
+    try:
+        data = request.get_json()
+        name = data.get("name")
 
+        if not name:
+            return jsonify({"error": "Name is required"}), 400
+
+        usernames = generate_usernames(name)
+        found_profiles = []
+
+        for username in usernames:
+            if check_instagram_user(username):
+                found_profiles.append(f"https://www.instagram.com/{username}/")
+
+        return jsonify({
+            "name": name,
+            "found_profiles": found_profiles,
+            "count": len(found_profiles)
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # ------------------ RUN ------------------ #
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True, port=5001)
+
+
+
+

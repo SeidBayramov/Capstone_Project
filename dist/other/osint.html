@@ -2,11 +2,11 @@
 <html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
 
 <head>
-  <title>News</title>
+  <title>OSINT Toolkit</title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="News Page - ShadowLink Platform" />
+  <meta name="description" content="OSINT Toolkit Page - ShadowLink Platform" />
   <meta name="author" content="ShadowLink Team 9" />
   <link rel="icon" href="../assets/images/shadow_link_symbol.svg" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -15,48 +15,66 @@
   <link rel="stylesheet" href="../assets/fonts/feather.css" />
   <link rel="stylesheet" href="../assets/fonts/fontawesome.css" />
   <link rel="stylesheet" href="../assets/fonts/material.css" />
-  <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
   <style>
-    .line-clamp-2 {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .line-clamp-3 {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-    }
-
-    .news-card {
-      border: 1px solid #e0e0e0;
+    .osint-section {
+      background: #ffffff;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
-      transition: all 0.3s ease;
-      background: white;
-      height: 100%;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .news-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    .osint-section h2 {
+      font-size: 1.5rem;
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #1f2937;
     }
 
-    .news-title {
-      color: #1a237e;
+    .osint-form {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .news-date {
-      font-size: 0.75rem;
-      color: #666;
-      padding-top: 10px;
-      text-align: right;
+    .osint-form input[type="text"] {
+      padding: 10px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+
+    .osint-form button {
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .osint-form button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .results {
+      margin-top: 12px;
+      padding: 12px;
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #111827;
     }
   </style>
 </head>
+
 
 <body>
   <!-- Loader -->
@@ -208,27 +226,49 @@
   </header>
 
   <!-- Main Content -->
-  <div class="pc-container">
+ <!-- Main Content -->
+ <div class="pc-container">
     <div class="pc-content">
       <div class="page-header">
         <div class="page-block">
           <div class="page-header-title">
-            <h5 class="mb-0 font-medium">This page for OSINT</h5>
+            <h5 class="mb-0 font-medium">OSINT Search Interface</h5>
           </div>
           <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">OSINT</a></li>
+            <li class="breadcrumb-item"><a href="#">Tools</a></li>
             <li class="breadcrumb-item active">OSINT</li>
           </ul>
         </div>
       </div>
 
-      <!-- News Grid -->
-      <div class="grid grid-cols-12 gap-6 mt-4" id="news-feed">
-        <!-- Cards will be inserted here -->
+      <div class="osint-section">
+        <h2>🔍 General OSINT</h2>
+        <form class="osint-form" method="post" action="/osint">
+          <input type="hidden" name="tool" value="general">
+          <input type="text" name="name" placeholder="Enter full name" required>
+          <button type="submit">Search</button>
+        </form>
+        <div class="results">{{ general_results }}</div>
+
+        <h2>📷 Instagram OSINT</h2>
+        <form class="osint-form" method="post" action="/osint" id="instaForm">
+          <input type="hidden" name="tool" value="insta">
+          <input type="text" name="name" placeholder="Enter Instagram handle" required id="instaName">
+          <button type="submit">Search</button>
+        </form>
+        <div class="results" id="instaResult">{{ insta_results }}</div>
+
+
+        <h2>🕵️ Sherlock Username Scan</h2>
+        <form class="osint-form" method="post" action="/osint">
+          <input type="hidden" name="tool" value="sherlock">
+          <input type="text" name="username" placeholder="Enter username" required>
+          <button type="submit">Search</button>
+        </form>
+        <div class="results">{{ sherlock_results }}</div>
       </div>
     </div>
   </div>
-
   <!-- Footer -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid mx-10">
@@ -248,9 +288,49 @@
   <script src="../assets/js/script.js"></script>
 
   <!-- News Loader -->
-  <script>
+<script>
+  document.getElementById('instaForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-  </script>
+    const name = document.getElementById('instaName').value;
+    const resultDiv = document.getElementById('instaResult');
+
+    if (!name.trim()) {
+      resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid name.</span>`;
+      return;
+    }
+
+    resultDiv.innerHTML = "🔍 Searching Instagram profiles...";
+
+    fetch('/api/check_instagram', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        resultDiv.innerHTML = `<span style="color:red;">❌ ${data.error}</span>`;
+      } else if (data.count === 0) {
+        resultDiv.innerHTML = `<span style="color:orange;">⚠️ No Instagram profiles found for "<strong>${data.name}</strong>".</span>`;
+      } else {
+        const links = data.found_profiles.map(url =>
+          `<li><a href="${url}" target="_blank">${url}</a></li>`
+        ).join('');
+        resultDiv.innerHTML = `
+          <span style="color:green;">✅ Found <strong>${data.count}</strong> profiles for "<strong>${data.name}</strong>":</span>
+          <ul style="margin-top: 8px; padding-left: 20px;">${links}</ul>
+        `;
+      }
+    })
+    .catch(err => {
+      resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
+    });
+  });
+</script>
+
 </body>
 
 </html>
