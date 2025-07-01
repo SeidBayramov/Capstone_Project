@@ -20,6 +20,8 @@ from osint_general import (
 )
 # External fetcher
 from news_fetcher11 import fetch_news
+from sherlock_runner import run_sherlock
+
 
 # Flask Setup
 app = Flask(
@@ -203,6 +205,22 @@ def check_instagram():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/sherlock_check', methods=['POST'])
+def sherlock_check():
+    try:
+        data = request.get_json()
+        username = data.get("username", "").strip()
+
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
+
+        result = run_sherlock(username)
+        return jsonify({"username": username, "result": result})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/check_general', methods=['POST'])
 def check_general_osint():
     try:

@@ -262,14 +262,11 @@
 
 
         <h2>🕵️ Sherlock Username Scan</h2>
-        <form class="osint-form" method="post" action="/osint">
-          <input type="hidden" name="tool" value="sherlock">
-          <input type="text" name="username" placeholder="Enter username" required>
-          <button type="submit">Search</button>
-        </form>
-        <div class="results">{{ sherlock_results }}</div>
-      </div>
-    </div>
+      <form class="osint-form" id="sherlockForm">
+  <input type="text" name="username" placeholder="Enter username" required id="sherlockUsername">
+  <button type="submit">Search</button>
+</form>
+<div class="results" id="sherlockResult">{{ sherlock_result }}</div>
   </div>
   <!-- Footer -->
   <footer class="pc-footer">
@@ -291,26 +288,29 @@
 
   <!-- News Loader -->
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ========== GENERAL OSINT ==========
   document.getElementById('generalForm').addEventListener('submit', function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const name = document.getElementById('generalName').value;
-  const resultDiv = document.getElementById('GeneralResult');
+    const name = document.getElementById('generalName').value;
+    const resultDiv = document.getElementById('GeneralResult');
 
-  if (!name.trim()) {
-    resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid name.</span>`;
-    return;
-  }
+    if (!name.trim()) {
+      resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid name.</span>`;
+      return;
+    }
 
-  resultDiv.innerHTML = "🔍 Running OSINT analysis...";
+    resultDiv.innerHTML = "🔍 Running OSINT analysis...";
 
-  fetch('/api/check_general', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name: name })
-  })
+    fetch('/api/check_general', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name })
+    })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
@@ -320,61 +320,78 @@
 
       let html = `<h4>🔍 Results for "<strong>${data.name}</strong>":</h4>`;
 
-      // Instagram
       html += `<p><strong>📸 Instagram:</strong><br>`;
-      if (data.instagram.length > 0) {
-        html += `<ul>${data.instagram.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No profiles found.</p>`;
-      }
+      html += data.instagram.length
+        ? `<ul>${data.instagram.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`
+        : `❌ No profiles found.</p>`;
 
-      // GitHub
       html += `<p><strong>🐙 GitHub:</strong><br>`;
-      if (data.github.length > 0) {
-        html += `<ul>${data.github.map(user => `<li><a href="${user.url}" target="_blank">${user.login}</a></li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No profiles found.</p>`;
-      }
+      html += data.github.length
+        ? `<ul>${data.github.map(user => `<li><a href="${user.url}" target="_blank">${user.login}</a></li>`).join('')}</ul>`
+        : `❌ No profiles found.</p>`;
 
-      // LinkedIn
       html += `<p><strong>🔗 LinkedIn:</strong><br>`;
-      if (data.linkedin.length > 0) {
-        html += `<ul>${data.linkedin.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No profiles found.</p>`;
-      }
+      html += data.linkedin.length
+        ? `<ul>${data.linkedin.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`
+        : `❌ No profiles found.</p>`;
 
-      // Emails
       html += `<p><strong>📧 Emails:</strong><br>`;
-      if (data.emails.length > 0) {
-        html += `<ul>${data.emails.map(email => `<li>${email}</li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No emails found.</p>`;
-      }
+      html += data.emails.length
+        ? `<ul>${data.emails.map(email => `<li>${email}</li>`).join('')}</ul>`
+        : `❌ No emails found.</p>`;
 
-      // Phones
       html += `<p><strong>📞 Phones:</strong><br>`;
-      if (data.phones.length > 0) {
-        html += `<ul>${data.phones.map(phone => `<li>${phone}</li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No phone numbers found.</p>`;
-      }
+      html += data.phones.length
+        ? `<ul>${data.phones.map(phone => `<li>${phone}</li>`).join('')}</ul>`
+        : `❌ No phone numbers found.</p>`;
 
-      // Google Dork
       html += `<p><strong>🌐 Google Dork Results:</strong><br>`;
-      if (data.google_dork.length > 0) {
-        html += `<ul>${data.google_dork.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
-      } else {
-        html += `❌ No results found.</p>`;
-      }
+      html += data.google_dork.length
+        ? `<ul>${data.google_dork.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`
+        : `❌ No results found.</p>`;
 
       resultDiv.innerHTML = html;
     })
     .catch(err => {
       resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
     });
-});
+  });
 
+  // ========== SHERLOCK ==========
+  document.getElementById('sherlockForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('sherlockUsername').value;
+    const resultDiv = document.getElementById('sherlockResult');
+
+    if (!username.trim()) {
+      resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid username.</span>`;
+      return;
+    }
+
+    resultDiv.innerHTML = "🕵️ Searching for accounts...";
+
+    fetch('/api/sherlock_check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: username })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        resultDiv.innerHTML = `<span style="color:red;">❌ ${data.error}</span>`;
+      } else {
+        resultDiv.innerHTML = `<strong>🔎 Results for "<code>${data.username}</code>":</strong><br><pre>${data.result}</pre>`;
+      }
+    })
+    .catch(err => {
+      resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
+    });
+  });
+
+  // ========== INSTAGRAM ==========
   document.getElementById('instaForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -415,7 +432,12 @@
       resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
     });
   });
+
+});
 </script>
+
+
+
 
 </body>
 
