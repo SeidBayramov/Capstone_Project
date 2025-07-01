@@ -243,12 +243,14 @@
 
       <div class="osint-section">
         <h2>🔍 General OSINT</h2>
-        <form class="osint-form" method="post" action="/osint">
-          <input type="hidden" name="tool" value="general">
-          <input type="text" name="name" placeholder="Enter full name" required>
+
+        <form class="osint-form" id="generalForm">
+          <input type="text" name="name" placeholder="Enter full name" required id="generalName">
           <button type="submit">Search</button>
         </form>
-        <div class="results">{{ general_results }}</div>
+
+        <div class="results" id="GeneralResult"></div>
+
 
         <h2>📷 Instagram OSINT</h2>
         <form class="osint-form" method="post" action="/osint" id="instaForm">
@@ -289,6 +291,90 @@
 
   <!-- News Loader -->
 <script>
+  document.getElementById('generalForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('generalName').value;
+  const resultDiv = document.getElementById('GeneralResult');
+
+  if (!name.trim()) {
+    resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid name.</span>`;
+    return;
+  }
+
+  resultDiv.innerHTML = "🔍 Running OSINT analysis...";
+
+  fetch('/api/check_general', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: name })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        resultDiv.innerHTML = `<span style="color:red;">❌ ${data.error}</span>`;
+        return;
+      }
+
+      let html = `<h4>🔍 Results for "<strong>${data.name}</strong>":</h4>`;
+
+      // Instagram
+      html += `<p><strong>📸 Instagram:</strong><br>`;
+      if (data.instagram.length > 0) {
+        html += `<ul>${data.instagram.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No profiles found.</p>`;
+      }
+
+      // GitHub
+      html += `<p><strong>🐙 GitHub:</strong><br>`;
+      if (data.github.length > 0) {
+        html += `<ul>${data.github.map(user => `<li><a href="${user.url}" target="_blank">${user.login}</a></li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No profiles found.</p>`;
+      }
+
+      // LinkedIn
+      html += `<p><strong>🔗 LinkedIn:</strong><br>`;
+      if (data.linkedin.length > 0) {
+        html += `<ul>${data.linkedin.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No profiles found.</p>`;
+      }
+
+      // Emails
+      html += `<p><strong>📧 Emails:</strong><br>`;
+      if (data.emails.length > 0) {
+        html += `<ul>${data.emails.map(email => `<li>${email}</li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No emails found.</p>`;
+      }
+
+      // Phones
+      html += `<p><strong>📞 Phones:</strong><br>`;
+      if (data.phones.length > 0) {
+        html += `<ul>${data.phones.map(phone => `<li>${phone}</li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No phone numbers found.</p>`;
+      }
+
+      // Google Dork
+      html += `<p><strong>🌐 Google Dork Results:</strong><br>`;
+      if (data.google_dork.length > 0) {
+        html += `<ul>${data.google_dork.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>`;
+      } else {
+        html += `❌ No results found.</p>`;
+      }
+
+      resultDiv.innerHTML = html;
+    })
+    .catch(err => {
+      resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
+    });
+});
+
   document.getElementById('instaForm').addEventListener('submit', function (e) {
     e.preventDefault();
 

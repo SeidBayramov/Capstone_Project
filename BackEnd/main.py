@@ -8,7 +8,16 @@ from flask_mail import Mail, Message
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from insta_checker import generate_usernames, check_instagram_user
-
+from osint_general import (
+    github_search,
+    generate_usernames,
+    check_instagram_user,
+    search_duckduckgo,
+    extract_emails,
+    extract_phones,
+    search_linkedin_profiles,
+    google_dork_search
+)
 # External fetcher
 from news_fetcher11 import fetch_news
 
@@ -194,6 +203,50 @@ def check_instagram():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+@app.route('/api/check_general', methods=['POST'])
+def check_general_osint():
+    try:
+        data = request.get_json()
+        name = data.get("name")
+
+        if not name:
+            return jsonify({"error": "Name is required"}), 400
+
+        results = {"name": name}
+
+        # GitHub
+        github_users = github_search(name)
+        results["github"] = github_users
+
+        # Instagram
+        usernames = generate_usernames(name)
+        found_insta = [
+            f"https://www.instagram.com/{username}/"
+            for username in usernames
+            if check_instagram_user(username)
+        ]
+        results["instagram"] = found_insta
+
+        # DuckDuckGo (Email & Phones)
+        ddg_text = search_duckduckgo(f'"{name}" email OR contact')
+        emails = extract_emails(ddg_text)
+        phones = extract_phones(ddg_text)
+        results["emails"] = emails
+        results["phones"] = phones
+
+        # LinkedIn
+        linkedin_profiles = search_linkedin_profiles(name)
+        results["linkedin"] = linkedin_profiles
+
+        # Google Dork (basic)
+        google_links = google_dork_search(name)
+        results["google_dork"] = google_links
+
+        return jsonify(results)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # ------------------ RUN ------------------ #
 if __name__ == '__main__':
     with app.app_context():
