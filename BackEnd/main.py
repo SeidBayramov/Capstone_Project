@@ -1,7 +1,10 @@
 import os
 import re
 import random
+import requests  
 import string
+from flask import Blueprint, jsonify
+from bs4 import BeautifulSoup
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
@@ -22,6 +25,14 @@ from osint_general import (
 from news_fetcher11 import fetch_news
 from sherlock_runner import run_sherlock
 
+from mitre import mitre_bp  # Faylın adı nədirsə onu uyğunlaşdır
+
+from flask import Flask
+from mitre import mitre_bp  # Faylın adını uyğunlaşdır
+
+app = Flask(__name__)
+app.register_blueprint(mitre_bp)
+
 
 # Flask Setup
 app = Flask(
@@ -29,6 +40,7 @@ app = Flask(
     template_folder=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'dist'),
     static_folder=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'dist', 'assets')
 )
+app.register_blueprint(mitre_bp)
 
 # Config
 app.config['SECRET_KEY'] = "c189ffd8d660e2c85caedfb6986dd2b4"
@@ -46,6 +58,8 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+mitre_bp = Blueprint('mitre', __name__)
 
 # User Model
 class User(UserMixin, db.Model):
@@ -266,6 +280,31 @@ def check_general_osint():
         return jsonify({"error": str(e)}), 500
 
 # ------------------ RUN ------------------ #
+
+@app.route("/api/mitre-live")
+def fetch_mitre_data():
+    try:
+        url = "https://attack.mitre.org/matrices/enterprise/"
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        tactic_divs = soup.select("div.tactic-row")
+        all_data = []
+
+        for tactic_div in tactic_divs:
+            tactic_name = tactic_div.select_one(".tactic-title")
+            if tactic_name:
+                tactic = tactic_name.text.strip()
+                technique_items = tactic_div.select("div.technique span.technique-name")
+                techniques = [item.text.strip() for item in technique_items if item.text.strip()]
+                all_data.append({"tactic": tactic, "techniques": techniques})
+
+        return jsonify(all_data)
+    
+    except Exception as e:
+        return jsonify({"error": f"❌ Failed to fetch MITRE data: {str(e)}"})
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
