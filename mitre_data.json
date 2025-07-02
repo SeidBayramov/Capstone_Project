@@ -1,0 +1,415 @@
+[
+  {
+    "tactic": "Exfiltration",
+    "techniques": [
+      "Valid Accounts",
+      "Brute Force",
+      "Scheduled Task/Job"
+    ]
+  },
+  {
+    "tactic": "Privilege Escalation",
+    "techniques": [
+      "Drive-by Compromise",
+      "Valid Accounts",
+      "Obfuscated Files or Information",
+      "Masquerading",
+      "Process Injection"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Malicious File",
+      "Command and Scripting Interpreter",
+      "Spearphishing Attachment",
+      "Scheduled Task/Job"
+    ]
+  },
+  {
+    "tactic": "Resource Development",
+    "techniques": [
+      "Exfiltration Over Web Service",
+      "Obfuscated Files or Information",
+      "Remote Services",
+      "Command and Scripting Interpreter"
+    ]
+  },
+  {
+    "tactic": "Resource Development",
+    "techniques": [
+      "Credential Dumping",
+      "Account Manipulation",
+      "Obfuscated Files or Information"
+    ]
+  },
+  {
+    "tactic": "Exfiltration",
+    "techniques": [
+      "Remote Desktop Protocol",
+      "Process Injection",
+      "Exploitation of Remote Services",
+      "Masquerading",
+      "Exfiltration Over Web Service",
+      "Pass the Hash"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Command and Scripting Interpreter",
+      "Exfiltration Over Web Service",
+      "Credential Dumping",
+      "Access Token Manipulation",
+      "Exploitation of Remote Services",
+      "Pass the Hash"
+    ]
+  },
+  {
+    "tactic": "Initial Access",
+    "techniques": [
+      "Remote Desktop Protocol",
+      "DNS Enumeration",
+      "Valid Accounts",
+      "Office Application Startup",
+      "Process Injection",
+      "Drive-by Compromise"
+    ]
+  },
+  {
+    "tactic": "Discovery",
+    "techniques": [
+      "Pass the Hash",
+      "Remote Desktop Protocol",
+      "Valid Accounts",
+      "Drive-by Compromise",
+      "Obfuscated Files or Information",
+      "Exfiltration Over Web Service"
+    ]
+  },
+  {
+    "tactic": "Privilege Escalation",
+    "techniques": [
+      "Remote Desktop Protocol",
+      "DNS Enumeration",
+      "Office Application Startup",
+      "Scheduled Task/Job",
+      "Exfiltration Over Web Service"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Data Destruction",
+      "Office Application Startup",
+      "System Information Discovery"
+    ]
+  },
+  {
+    "tactic": "Initial Access",
+    "techniques": [
+      "Command and Scripting Interpreter",
+      "Malicious File",
+      "Valid Accounts",
+      "Pass the Hash",
+      "Obfuscated Files or Information",
+      "System Information Discovery"
+    ]
+  },
+  {
+    "tactic": "Reconnaissance",
+    "techniques": [
+      "Signed Binary Proxy Execution",
+      "Exploitation of Remote Services",
+      "Brute Force",
+      "Valid Accounts",
+      "Credential Dumping",
+      "System Information Discovery"
+    ]
+  },
+  {
+    "tactic": "Discovery",
+    "techniques": [
+      "Account Manipulation",
+      "Obfuscated Files or Information",
+      "Malicious File",
+      "Credential Dumping",
+      "Valid Accounts"
+    ]
+  },
+  {
+    "tactic": "Impact",
+    "techniques": [
+      "System Information Discovery",
+      "Drive-by Compromise",
+      "PowerShell",
+      "Scheduled Task/Job",
+      "Exfiltration Over Web Service",
+      "Credential Dumping"
+    ]
+  },
+  {
+    "tactic": "Impact",
+    "techniques": [
+      "Pass the Hash",
+      "Drive-by Compromise",
+      "Office Application Startup"
+    ]
+  },
+  {
+    "tactic": "Initial Access",
+    "techniques": [
+      "Data Destruction",
+      "PowerShell",
+      "Signed Binary Proxy Execution",
+      "DNS Enumeration",
+      "Obfuscated Files or Information"
+    ]
+  },
+  {
+    "tactic": "Execution",
+    "techniques": [
+      "Remote Services",
+      "Data Destruction",
+      "Masquerading"
+    ]
+  },
+  {
+    "tactic": "Lateral Movement",
+    "techniques": [
+      "Credential Dumping",
+      "Process Injection",
+      "Exploitation of Remote Services",
+      "Access Token Manipulation",
+      "DNS Enumeration"
+    ]
+  },
+  {
+    "tactic": "Reconnaissance",
+    "techniques": [
+      "Masquerading",
+      "Valid Accounts",
+      "Signed Binary Proxy Execution",
+      "Office Application Startup"
+    ]
+  },
+  {
+    "tactic": "Lateral Movement",
+    "techniques": [
+      "Exfiltration Over Web Service",
+      "Office Application Startup",
+      "Remote Services",
+      "PowerShell",
+      "Command and Scripting Interpreter",
+      "Malicious File"
+    ]
+  },
+  {
+    "tactic": "Impact",
+    "techniques": [
+      "Valid Accounts",
+      "Access Token Manipulation",
+      "Exploitation of Remote Services",
+      "Account Manipulation",
+      "Spearphishing Attachment"
+    ]
+  },
+  {
+    "tactic": "Command and Control",
+    "techniques": [
+      "System Information Discovery",
+      "Process Injection",
+      "Obfuscated Files or Information",
+      "Scheduled Task/Job",
+      "Spearphishing Attachment",
+      "DNS Enumeration"
+    ]
+  },
+  {
+    "tactic": "Privilege Escalation",
+    "techniques": [
+      "Drive-by Compromise",
+      "Spearphishing Attachment",
+      "Account Manipulation",
+      "Valid Accounts"
+    ]
+  },
+  {
+    "tactic": "Reconnaissance",
+    "techniques": [
+      "Scheduled Task/Job",
+      "Access Token Manipulation",
+      "Process Injection",
+      "DNS Enumeration"
+    ]
+  },
+  {
+    "tactic": "Collection",
+    "techniques": [
+      "PowerShell",
+      "Data Destruction",
+      "Exfiltration Over Web Service",
+      "Process Injection"
+    ]
+  },
+  {
+    "tactic": "Execution",
+    "techniques": [
+      "Spearphishing Attachment",
+      "Masquerading",
+      "Valid Accounts",
+      "Remote Services",
+      "Obfuscated Files or Information"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Account Manipulation",
+      "Process Injection",
+      "Pass the Hash",
+      "Valid Accounts",
+      "Scheduled Task/Job",
+      "Masquerading"
+    ]
+  },
+  {
+    "tactic": "Resource Development",
+    "techniques": [
+      "Brute Force",
+      "PowerShell",
+      "Scheduled Task/Job",
+      "Credential Dumping"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Obfuscated Files or Information",
+      "Exfiltration Over Web Service",
+      "Process Injection",
+      "Data Destruction",
+      "PowerShell",
+      "Office Application Startup"
+    ]
+  },
+  {
+    "tactic": "Discovery",
+    "techniques": [
+      "Pass the Hash",
+      "Remote Services",
+      "Obfuscated Files or Information"
+    ]
+  },
+  {
+    "tactic": "Impact",
+    "techniques": [
+      "Signed Binary Proxy Execution",
+      "System Information Discovery",
+      "Access Token Manipulation",
+      "Exfiltration Over Web Service"
+    ]
+  },
+  {
+    "tactic": "Exfiltration",
+    "techniques": [
+      "Malicious File",
+      "Data Destruction",
+      "Access Token Manipulation",
+      "Scheduled Task/Job",
+      "Drive-by Compromise"
+    ]
+  },
+  {
+    "tactic": "Defense Evasion",
+    "techniques": [
+      "Malicious File",
+      "DNS Enumeration",
+      "Brute Force",
+      "Pass the Hash",
+      "Exploitation of Remote Services"
+    ]
+  },
+  {
+    "tactic": "Discovery",
+    "techniques": [
+      "DNS Enumeration",
+      "Malicious File",
+      "Credential Dumping",
+      "Obfuscated Files or Information",
+      "Signed Binary Proxy Execution"
+    ]
+  },
+  {
+    "tactic": "Execution",
+    "techniques": [
+      "PowerShell",
+      "Signed Binary Proxy Execution",
+      "Process Injection",
+      "Brute Force",
+      "Account Manipulation",
+      "Credential Dumping"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Command and Scripting Interpreter",
+      "Obfuscated Files or Information",
+      "Scheduled Task/Job",
+      "Malicious File",
+      "Drive-by Compromise",
+      "Brute Force"
+    ]
+  },
+  {
+    "tactic": "Persistence",
+    "techniques": [
+      "Drive-by Compromise",
+      "Credential Dumping",
+      "Malicious File",
+      "System Information Discovery",
+      "Signed Binary Proxy Execution",
+      "Process Injection"
+    ]
+  },
+  {
+    "tactic": "Lateral Movement",
+    "techniques": [
+      "System Information Discovery",
+      "Account Manipulation",
+      "Drive-by Compromise"
+    ]
+  },
+  {
+    "tactic": "Discovery",
+    "techniques": [
+      "Scheduled Task/Job",
+      "Malicious File",
+      "Remote Services",
+      "PowerShell",
+      "Spearphishing Attachment",
+      "Access Token Manipulation"
+    ]
+  },
+  {
+    "tactic": "Credential Access",
+    "techniques": [
+      "Account Manipulation",
+      "Signed Binary Proxy Execution",
+      "Process Injection",
+      "Credential Dumping",
+      "Drive-by Compromise",
+      "Scheduled Task/Job"
+    ]
+  },
+  {
+    "tactic": "Execution",
+    "techniques": [
+      "Remote Desktop Protocol",
+      "PowerShell",
+      "System Information Discovery",
+      "Command and Scripting Interpreter"
+    ]
+  }
+]

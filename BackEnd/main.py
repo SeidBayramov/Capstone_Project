@@ -3,6 +3,7 @@ import re
 import random
 import requests  
 import string
+import json
 from flask import Blueprint, jsonify
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
@@ -281,30 +282,18 @@ def check_general_osint():
 
 # ------------------ RUN ------------------ #
 
-@app.route("/api/mitre-live")
-def fetch_mitre_data():
+@app.route("/api/mitre", methods=["GET"])
+def mitre_from_json():
     try:
-        url = "https://attack.mitre.org/matrices/enterprise/"
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        tactic_divs = soup.select("div.tactic-row")
-        all_data = []
-
-        for tactic_div in tactic_divs:
-            tactic_name = tactic_div.select_one(".tactic-title")
-            if tactic_name:
-                tactic = tactic_name.text.strip()
-                technique_items = tactic_div.select("div.technique span.technique-name")
-                techniques = [item.text.strip() for item in technique_items if item.text.strip()]
-                all_data.append({"tactic": tactic, "techniques": techniques})
-
-        return jsonify(all_data)
-    
+        json_path = os.path.join(os.path.dirname(__file__), '..', 'mitre_data.json')
+        with open(json_path, "r", encoding="utf-8") as f:
+            data =  json.load(f)
+        return jsonify(data)
     except Exception as e:
-        return jsonify({"error": f"❌ Failed to fetch MITRE data: {str(e)}"})
+        return jsonify({"error": f"Failed to load MITRE data: {str(e)}"}), 500
 
 
+# ------------------ RUN APP ------------------ #
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
