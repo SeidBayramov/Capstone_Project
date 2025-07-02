@@ -25,12 +25,10 @@ from osint_general import (
 # External fetcher
 from news_fetcher11 import fetch_news
 from sherlock_runner import run_sherlock
-
-from mitre import mitre_bp  # Faylın adı nədirsə onu uyğunlaşdır
+ # Faylın adı nədirsə onu uyğunlaşdır
 
 from flask import Flask
-from mitre import mitre_bp  # Faylın adını uyğunlaşdır
-
+from mitre_api import mitre_bp
 app = Flask(__name__)
 app.register_blueprint(mitre_bp)
 

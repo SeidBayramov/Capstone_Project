@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" dir="ltr" data-pc-theme="light">
 <head>
-  <title>MITRE ATT&CK®</title>
+  <title>MITRE ATT&CK Explorer</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="MITRE ATT&CK® Tactics Overview" />
+  <meta name="description" content="MITRE ATT&CK Explorer - ShadowLink Platform" />
   <meta name="author" content="ShadowLink Team 9" />
   <link rel="icon" href="../assets/images/shadow_link_symbol.svg" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -15,23 +15,107 @@
   <link rel="stylesheet" href="../assets/fonts/fontawesome.css" />
   <link rel="stylesheet" href="../assets/fonts/material.css" />
   <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
+  <style>
+    .mitre-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+    .mitre-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .pagination {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .pagination button {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-color);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .pagination button:hover:not(:disabled) {
+      background-color: var(--light-bg);
+    }
+    .pagination button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    .pagination button:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .pagination .ellipsis {
+      padding: 6px;
+      color: var(--text-muted);
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #loading-indicator {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    mark {
+      background-color: rgba(255, 235, 59, 0.5);
+      color: inherit;
+      padding: 0 2px;
+    }
+    .example-link {
+      color: var(--primary-color);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .example-link:hover {
+      text-decoration: underline;
+      color: var(--primary-hover);
+    }
+    #mitre-search-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+  </style>
 </head>
 
 <body>
-  <!-- Pre-loader -->
-  <div class="loader-bg fixed inset-0 bg-white dark:bg-themedark-cardbg z-[1034]">
+  <!-- Loader -->
+  <div class="loader-bg fixed inset-0 bg-white z-[1034]">
     <div class="loader-track h-[5px] w-full inline-block absolute overflow-hidden top-0">
       <div class="loader-fill w-[300px] h-[5px] bg-primary-500 absolute top-0 left-0 animate-[hitZak_0.6s_ease-in-out_infinite_alternate]"></div>
     </div>
   </div>
 
   <!-- Sidebar -->
-<nav class="pc-sidebar">
-  
+  <nav class="pc-sidebar">
     <div class="navbar-wrapper">
-    <div class="m-header flex items-center py-4 px-6 h-header-height">
-      <a href="../dashboard/index.html" class="b-brand flex items-center gap-3">
-        <!-- ========   Change your logo from here   ============ -->
+      <div class="m-header flex items-center py-4 px-6 h-header-height">
+        <a href="../dashboard/index.html" class="b-brand flex items-center gap-3">
           <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px; padding-bottom: 15px;">
             <img src="../assets/images/shadow_link_dark.svg"
                 style="width: 80px;
@@ -40,9 +124,8 @@
                         border-radius: 12px;
                         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);" />
           </div>
-
-      </a>
-    </div>
+        </a>
+      </div>
       <div class="navbar-content py-2.5">
         <ul class="pc-navbar">
           <li class="pc-item pc-caption"><label>Navigation</label></li>
@@ -51,13 +134,13 @@
           <li class="pc-item pc-caption"><label>MITRE</label><i data-feather="shield"></i></li>
           <li class="pc-item"><a href="mitre.html" class="pc-link"><span class="pc-micon"><i data-feather="target"></i></span><span class="pc-mtext">MITRE ATT&CK®</span></a></li>
 
-         <li class="pc-item pc-caption"><label>OSINT</label><i data-feather="eye"></i></li>
-  <li class="pc-item">
-    <a href="osint.html" class="pc-link">
-      <span class="pc-micon"><i data-feather="eye"></i></span>
-      <span class="pc-mtext">OSINT</span>
-    </a>
-  </li>
+          <li class="pc-item pc-caption"><label>OSINT</label><i data-feather="eye"></i></li>
+          <li class="pc-item">
+            <a href="osint.html" class="pc-link">
+              <span class="pc-micon"><i data-feather="eye"></i></span>
+              <span class="pc-mtext">OSINT</span>
+            </a>
+          </li>
           <li class="pc-item pc-caption"><label>Other</label></li>
           <li class="pc-item"><a href="news.html" class="pc-link"><span class="pc-micon"><i data-feather="activity"></i></span><span class="pc-mtext">News</span></a></li>
           <li class="pc-item"><a href="support.html" class="pc-link"><span class="pc-micon"><i data-feather="help-circle"></i></span><span class="pc-mtext">Support</span></a></li>
@@ -151,37 +234,63 @@
   </header>
 
   <!-- Main Content -->
-<div class="pc-container">
+  <div class="pc-container">
     <div class="pc-content">
       <div class="page-header">
         <div class="page-block">
           <div class="page-header-title">
-            <h5 class="mb-0 font-medium">MITRE ATT&CK®</h5>
+            <h5 class="mb-0 font-medium">MITRE ATT&CK Explorer</h5>
           </div>
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">MITRE</a></li>
-            <li class="breadcrumb-item active">MITRE ATT&CK®</li>
+            <li class="breadcrumb-item active">ATT&CK Explorer</li>
           </ul>
         </div>
       </div>
 
-      <div class="grid grid-cols-12 gap-6 mt-4">
+      <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">
-          <div class="card">
+          <!-- MITRE ATT&CK Explorer Content -->
+          <div class="card" id="mitre-search-container">
+            <div class="card-header">
+              <h5>🔎 MITRE ATT&CK Explorer</h5>
+            </div>
             <div class="card-body">
-              <p class="text-sm text-gray-700 mb-3">
-                MITRE ATT&CK® is a knowledge base of adversary tactics and techniques based on real-world observations.
-              </p>
-              <input type="text" id="search" placeholder="🔍 Search technique..." class="form-control my-3 w-full border border-gray-300 p-2 rounded" />
-<div id="mitre-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"></div>
+              <div class="mb-4 flex gap-4 items-center flex-wrap">
+                <input type="text" id="search" placeholder="Search: T1059, Credential Dumping..." class="form-control w-full max-w-md">
+                <select id="typeFilter" class="form-control">
+                  <option value="">All Types</option>
+                  <option value="technique">Technique</option>
+                  <option value="group">Group</option>
+                  <option value="software">Software</option>
+                  <option value="mitigation">Mitigation</option>
+                  <option value="tactic">Tactic</option>
+                  <option value="matrix">Matrix</option>
+                  <option value="data_component">Data Component</option>
+                  <option value="killchain">Kill Chain</option>
+                </select>
+              </div>
+
+              <div id="examples" class="mb-4 text-sm text-muted">
+                Try: 
+                <span class="example-link">Credential Dumping</span>, 
+                <span class="example-link">T1059</span>, 
+                <span class="example-link">linux</span>
+              </div>
+
+              <div id="loading-indicator">
+                <div class="loading"></div>
+                <span>Loading data...</span>
+              </div>
+
+              <div id="mitre-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"></div>
+              <div id="pagination" class="pagination mt-4"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-
 
   <!-- Footer -->
   <footer class="pc-footer">
@@ -201,51 +310,268 @@
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/script.js"></script>
 
-  <!-- Future scripts for MITRE interaction -->
-
-<!-- Scripts -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const container = document.getElementById('mitre-container');
-  const searchInput = document.getElementById('search');
-
-  let mitreData = [];
-
-  // Fetch MITRE data from static JSON API
-fetch('/api/mitre')
-  .then(response => response.json())
-  .then(data => {
-    console.log("MITRE JSON:", data);  // bunu əlavə et
-    mitreData = data;
-    displayResults(data);
-  })
-
-
-  function displayResults(data) {
-    container.innerHTML = '';
-    data.forEach(item => {
-      const tacticBlock = document.createElement('div');
-      tacticBlock.classList.add('p-4', 'border', 'rounded', 'bg-white', 'shadow');
-      tacticBlock.innerHTML = `
-        <h3 class="text-lg font-semibold mb-2">${item.tactic}</h3>
-        <ul class="list-disc list-inside space-y-1">
-          ${item.techniques.map(t => `<li>${t}</li>`).join('')}
-        </ul>`;
-      container.appendChild(tacticBlock);
+  <script>
+    // Initialize feather icons
+    document.addEventListener('DOMContentLoaded', function() {
+      feather.replace();
+      
+      // Initialize MITRE ATT&CK Explorer
+      initMitreExplorer();
     });
-  }
 
-  // Search functionality
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase();
-    const filtered = mitreData.map(item => ({
-      tactic: item.tactic,
-      techniques: item.techniques.filter(tech => tech.toLowerCase().includes(query))
-    })).filter(item => item.techniques.length > 0);
-    displayResults(filtered);
-  });
-});
-</script>
+    function initMitreExplorer() {
+      const container = document.getElementById('mitre-container');
+      const searchInput = document.getElementById('search');
+      const typeFilter = document.getElementById('typeFilter');
+      const pagination = document.getElementById('pagination');
+      const examples = document.querySelectorAll('.example-link');
+      const loadingIndicator = document.getElementById('loading-indicator');
 
+      let fullData = [];
+      let filteredData = [];
+      let currentPage = 1;
+      const resultsPerPage = 9; // 3 columns x 3 rows
+
+      // Helper function to escape regex special characters
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightMatch(text, query) {
+        if (!text || !query) return text;
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'ig');
+        return text.toString().replace(regex, '<mark>$1</mark>');
+      }
+
+      function renderPagination(totalPages) {
+        pagination.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const maxVisible = 5;
+        const half = Math.floor(maxVisible / 2);
+        let start = Math.max(currentPage - half, 1);
+        let end = Math.min(start + maxVisible - 1, totalPages);
+
+        if (end - start < maxVisible - 1) {
+          start = Math.max(end - maxVisible + 1, 1);
+        }
+
+        // Previous button
+        if (currentPage > 1) {
+          const prevBtn = document.createElement('button');
+          prevBtn.textContent = '← Previous';
+          prevBtn.addEventListener('click', () => {
+            currentPage--;
+            displayResults();
+            window.scrollTo({ top: container.offsetTop - 100, behavior: 'smooth' });
+          });
+          pagination.appendChild(prevBtn);
+        }
+
+        // First page
+        if (start > 1) {
+          addPageButton(1);
+          if (start > 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.className = 'ellipsis';
+            ellipsis.textContent = '...';
+            pagination.appendChild(ellipsis);
+          }
+        }
+
+        // Middle pages
+        for (let i = start; i <= end; i++) {
+          addPageButton(i);
+        }
+
+        // Last page
+        if (end < totalPages) {
+          if (end < totalPages - 1) {
+            const ellipsis = document.createElement('span');
+            ellipsis.className = 'ellipsis';
+            ellipsis.textContent = '...';
+            pagination.appendChild(ellipsis);
+          }
+          addPageButton(totalPages);
+        }
+
+        // Next button
+        if (currentPage < totalPages) {
+          const nextBtn = document.createElement('button');
+          nextBtn.textContent = 'Next →';
+          nextBtn.addEventListener('click', () => {
+            currentPage++;
+            displayResults();
+            window.scrollTo({ top: container.offsetTop - 100, behavior: 'smooth' });
+          });
+          pagination.appendChild(nextBtn);
+        }
+      }
+
+      function addPageButton(page) {
+        const btn = document.createElement('button');
+        btn.textContent = page;
+        if (page === currentPage) {
+          btn.classList.add('active');
+          btn.disabled = true;
+        }
+        btn.addEventListener('click', () => {
+          currentPage = page;
+          displayResults();
+          window.scrollTo({ top: container.offsetTop - 100, behavior: 'smooth' });
+        });
+        pagination.appendChild(btn);
+      }
+
+      function displayResults() {
+        container.innerHTML = '';
+
+        if (!filteredData.length) {
+          container.innerHTML = '<div class="col-span-full"><div class="mitre-card"><p class="text-muted">No results found. Try a different search term.</p></div></div>';
+          pagination.innerHTML = '';
+          return;
+        }
+
+        const start = (currentPage - 1) * resultsPerPage;
+        const end = start + resultsPerPage;
+        const paginated = filteredData.slice(start, end);
+
+        paginated.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'mitre-card';
+
+          let link = '#';
+          let typeDisplay = item.type;
+          
+          // Determine link and prettify type display
+          switch(item.type) {
+            case 'technique':
+              link = `https://attack.mitre.org/techniques/${item.id}/`;
+              typeDisplay = 'Technique';
+              break;
+            case 'group':
+              link = `https://attack.mitre.org/groups/${item.id}/`;
+              typeDisplay = 'Group';
+              break;
+            case 'software':
+              link = `https://attack.mitre.org/software/${item.id}/`;
+              typeDisplay = 'Software';
+              break;
+            case 'mitigation':
+              link = `https://attack.mitre.org/mitigations/${item.id}/`;
+              typeDisplay = 'Mitigation';
+              break;
+            case 'tactic':
+              link = `https://attack.mitre.org/tactics/${item.id}/`;
+              typeDisplay = 'Tactic';
+              break;
+            case 'matrix':
+              link = `https://attack.mitre.org/matrices/${item.id}/`;
+              typeDisplay = 'Matrix';
+              break;
+            case 'data_component':
+              link = `https://attack.mitre.org/data-sources/${item.id}/`;
+              typeDisplay = 'Data Component';
+              break;
+            case 'killchain':
+              typeDisplay = 'Kill Chain';
+              break;
+          }
+
+          const searchQuery = searchInput.value.trim();
+          div.innerHTML = `
+            <h3 class="font-semibold text-lg mb-1">
+              <a href="${link}" target="_blank" class="text-primary-500 hover:underline">
+                ${highlightMatch(item.name || 'Unnamed', searchQuery)} 
+                <span class="text-muted">(${highlightMatch(item.id, searchQuery)})</span>
+              </a>
+            </h3>
+            <p class="text-sm mb-1"><strong>Type:</strong> ${typeDisplay}</p>
+            ${item.description ? `<p class="text-sm">${highlightMatch(item.description.slice(0, 200), searchQuery)}${item.description.length > 200 ? '...' : ''}</p>` : ''}
+          `;
+
+          container.appendChild(div);
+        });
+
+        renderPagination(Math.ceil(filteredData.length / resultsPerPage));
+      }
+
+      function filterAndSetResults(resetPage = true) {
+        const query = searchInput.value.trim().toLowerCase();
+        const type = typeFilter.value;
+
+        filteredData = fullData.filter(item => {
+          const matchesType = !type || item.type === type;
+          if (!matchesType) return false;
+          
+          if (!query) return true;
+          
+          // Search in multiple fields
+          const searchFields = [
+            item.id?.toLowerCase() || '',
+            item.name?.toLowerCase() || '',
+            item.type?.toLowerCase() || ''
+          ];
+          
+          return searchFields.some(field => field.includes(query));
+        });
+
+        if (resetPage) currentPage = 1;
+        displayResults();
+      }
+
+      function showLoading(show) {
+        loadingIndicator.style.display = show ? 'flex' : 'none';
+      }
+
+      function fetchData() {
+        showLoading(true);
+        
+        // Replace with your actual API endpoint
+        fetch('/api/mitre/search')
+          .then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+          })
+          .then(data => {
+            fullData = Array.isArray(data) ? data : [];
+            filterAndSetResults(true);
+          })
+          .catch(err => {
+            console.error("Fetch error:", err);
+            container.innerHTML = `
+              <div class="col-span-full">
+                <div class="mitre-card">
+                  <p style="color:var(--danger-color);">Failed to load data from API.</p>
+                  <p class="text-sm">Error: ${err.message}</p>
+                </div>
+              </div>
+            `;
+          })
+          .finally(() => {
+            showLoading(false);
+          });
+      }
+
+      // Event listeners with debounce for search input
+      let searchTimeout;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          filterAndSetResults(true);
+        }, 300);
+      });
+      
+      typeFilter.addEventListener('change', () => filterAndSetResults(true));
+      
+      examples.forEach(el => el.addEventListener('click', () => {
+        searchInput.value = el.textContent;
+        filterAndSetResults(true);
+      }));
+
+      // Initialize the explorer
+      fetchData();
+    }
+  </script>
 </body>
 </html>
