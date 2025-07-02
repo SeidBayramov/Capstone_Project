@@ -1,0 +1,8 @@
+beautifulsoup4
+feedparser
+Flask
+Flask-Login
+Flask-Mail
+Flask-SQLAlchemy
+googlesearch-python
+requests
