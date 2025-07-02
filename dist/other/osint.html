@@ -357,39 +357,49 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // ========== SHERLOCK ==========
-  document.getElementById('sherlockForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+ // ========== SHERLOCK ==========
+document.getElementById('sherlockForm').addEventListener('submit', function (e) {
+  e.preventDefault();
 
-    const username = document.getElementById('sherlockUsername').value;
-    const resultDiv = document.getElementById('sherlockResult');
+  const username = document.getElementById('sherlockUsername').value;
+  const resultDiv = document.getElementById('sherlockResult');
 
-    if (!username.trim()) {
-      resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid username.</span>`;
-      return;
+  if (!username.trim()) {
+    resultDiv.innerHTML = `<span style="color:red;">⚠️ Please enter a valid username.</span>`;
+    return;
+  }
+
+  resultDiv.innerHTML = "🕵️ Searching for accounts...";
+
+  fetch('/api/sherlock_check', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username: username })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) {
+      resultDiv.innerHTML = `<span style="color:red;">❌ ${data.error}</span>`;
+    } else {
+      const lines = data.result.split("\n").filter(line => line.includes("https://"));
+      const links = lines.map(line => {
+        const match = line.match(/https?:\/\/\S+/);
+        return match ? `<li><a href="${match[0]}" target="_blank" rel="noopener noreferrer">${match[0]}</a></li>` : '';
+      }).join('');
+
+      resultDiv.innerHTML = `
+        <strong>🔎 Results for "<code>${data.username}</code>":</strong><br>
+        <ul style="padding-left: 18px;">${links || "<li>No accounts found.</li>"}</ul>
+        <p style="margin-top:8px;">🔗 Total found: <strong>${lines.length}</strong></p>
+      `;
     }
-
-    resultDiv.innerHTML = "🕵️ Searching for accounts...";
-
-    fetch('/api/sherlock_check', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username: username })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) {
-        resultDiv.innerHTML = `<span style="color:red;">❌ ${data.error}</span>`;
-      } else {
-        resultDiv.innerHTML = `<strong>🔎 Results for "<code>${data.username}</code>":</strong><br><pre>${data.result}</pre>`;
-      }
-    })
-    .catch(err => {
-      resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
-    });
+  })
+  .catch(err => {
+    resultDiv.innerHTML = `<span style="color:red;">❌ Request failed: ${err}</span>`;
   });
+});
 
   // ========== INSTAGRAM ==========
   document.getElementById('instaForm').addEventListener('submit', function (e) {
