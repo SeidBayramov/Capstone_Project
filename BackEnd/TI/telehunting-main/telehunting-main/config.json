@@ -1,0 +1,16 @@
+{
+  "initial_channel_links": [
+    "https://t.me/Moonshine_Cloud",
+    "https://t.me/ctinow",
+    "https://t.me/cbanke",
+    "https://t.me/darkwebintel",
+    "https://t.me/threat_intelligence_feed",
+    "https://t.me/malwarenews",
+    "https://t.me/hacknowledge",
+    "https://t.me/breachedintel",
+    "https://t.me/DarkWeb_MarketAlerts",
+    "https://t.me/CyberLeaksTracker"
+  ],
+  "message_keywords": ["hack", "carding", "malware", "exploit", "cracking", "RAT", "stealer", "botnet", "leak","unec"],
+  "batch_size": 100
+}

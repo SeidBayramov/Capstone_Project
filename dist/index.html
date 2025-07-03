@@ -202,61 +202,355 @@
 
 
     <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        <!-- [ breadcrumb ] start -->
-<div class="page-header">
-  <div class="page-block">
-    <div class="page-header-title">
-      <h5 class="mb-0 font-medium">Dashboard</h5>
-    </div>
-    <ul class="breadcrumb">
-      <li class="breadcrumb-item"><a href="javascript: void(0)">Navigation</a></li>
-      <li class="breadcrumb-item" aria-current="page">Dashboard</li>
-    </ul>
-  </div>
-</div>
-        <!-- [ breadcrumb ] end -->
-
-        <!-- [ Main Content ] start -->
-              <div class="col-span-12">
-            <div class="card-body">
-  <form id="query-form" class="mb-4">
-    <label for="query-input" class="font-semibold block mb-1">Enter IP / Domain / Name:</label>
-    <input type="text" id="query-input" class="form-control w-full mb-3" placeholder="e.g. 8.8.8.8 or example.com" required />
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
-
-  <div id="loading" class="text-blue-600 mb-2" style="display: none;">🔄 Loading data...</div>
-  <div id="error" class="text-red-600 mb-2" style="display: none;">⚠️ Failed to fetch data.</div>
-  <div id="no-result" class="text-gray-600 mb-2" style="display: none;">ℹ️ No data found.</div>
-
-  <div id="result-container" class="mt-4 hidden">
-    <div class="border rounded p-4 bg-white shadow">
-      <h5 class="font-semibold mb-2">🔍 Result:</h5>
-      <p><strong>Type:</strong> <span id="res-type"></span></p>
-      <p><strong>Threat Score:</strong> <span id="res-score"></span></p>
-      <p><strong>Tags:</strong> <span id="res-tags"></span></p>
-      <p><strong>Sources:</strong> <span id="res-sources"></span></p>
-    </div>
-  </div>
-</div>
-
-          </div>
-        <!-- [ Main Content ] end -->
+<!-- [ Main Content ] start -->
+<div class="pc-container">
+  <div class="pc-content">
+    <div class="page-header">
+      <div class="page-block">
+        <div class="page-header-title">
+          <h5 class="mb-0 font-medium">IP Threat Intelligence</h5>
+        </div>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Navigation</a></li>
+          <li class="breadcrumb-item">Dashboard</li>
+        </ul>
       </div>
     </div>
-    <!-- [ Main Content ] end -->
-    <footer class="pc-footer">
-      <div class="footer-wrapper container-fluid mx-10">
-          <div class="col-span-12 sm:col-span-6 my-1 justify-self-end">
-                  <p class="inline-block max-sm:mr-3 sm:ml-2">created by Team 9 </p>
+
+    <!-- [ Form & Result Block ] -->
+    <div class="card">
+      <div class="card-body">
+        <form id="ip-form" class="mb-4">
+          <div class="flex gap-4">
+            <div class="flex-grow">
+              <label for="ip-input" class="block font-semibold mb-1">Enter IP Address:</label>
+              <input type="text" id="ip-input" class="form-control w-full" placeholder="e.g. 8.8.8.8" required />
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="btn btn-primary h-[42px]">
+                <span class="flex items-center gap-2">
+                  <i data-feather="search" class="w-4 h-4"></i>
+                  Check
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div id="loading" class="flex items-center gap-2 text-blue-600 mb-4 hidden">
+          <div class="animate-spin">
+            <i data-feather="loader" class="w-5 h-5"></i>
+          </div>
+          <span>Analyzing IP address...</span>
+        </div>
+        
+        <div id="error" class="alert alert-danger hidden">
+          <div class="flex items-center gap-2">
+            <i data-feather="alert-circle" class="w-5 h-5"></i>
+            <span>⚠️ An error occurred while processing your request. Please try again.</span>
           </div>
         </div>
+        
+        <div id="results" class="grid grid-cols-1 gap-4">
+          <!-- Results will be dynamically inserted here -->
+        </div>
       </div>
-    </footer>
- 
-    <!-- Required Js -->
+    </div>
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+
+<script>
+  document.getElementById("ip-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const ip = document.getElementById("ip-input").value.trim();
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const results = document.getElementById("results");
+
+    loading.classList.remove("hidden");
+    error.classList.add("hidden");
+    results.innerHTML = "";
+
+    try {
+      const res = await fetch(`/api/ip_threat?ip=${encodeURIComponent(ip)}`);
+      const data = await res.json();
+      loading.classList.add("hidden");
+
+      const getIconForField = (field, value) => {
+        const iconMap = {
+          // Common fields
+          'ip': 'globe',
+          'status': value === 'ok' ? 'check-circle' : 'alert-circle',
+          'country': 'map-pin',
+          'as_owner': 'building',
+          
+          // AbuseIPDB
+          'abuse_score': value > 50 ? 'alert-triangle' : value > 25 ? 'alert-octagon' : 'shield',
+          'total_reports': 'flag',
+          'last_report': 'calendar',
+          
+          // BlacklistMaster
+          'blacklisted': value ? 'x-octagon' : 'shield',
+          'count': 'hash',
+          'blacklists': 'list',
+          'blacklist_name': 'tag',
+          'blacklist_severity': value === 'High' ? 'alert-triangle' : value === 'Medium' ? 'alert-octagon' : 'alert-circle',
+          
+          // VirusTotal
+          'reputation': value > 0 ? 'thumbs-up' : value < 0 ? 'thumbs-down' : 'help-circle',
+          'last_analysis': 'activity',
+          'harmless': 'check',
+          'malicious': 'x',
+          'suspicious': 'alert-triangle',
+          'timeout': 'clock',
+          'undetected': 'eye-off',
+          
+          // Shodan
+          'ports': 'hard-drive',
+          'vulnerabilities': 'alert-triangle'
+        };
+        
+        return iconMap[field] || 'info';
+      };
+
+      const getColorForValue = (field, value) => {
+        if (field === 'abuse_score') {
+          return value > 50 ? 'text-red-500' : value > 25 ? 'text-orange-500' : 'text-green-500';
+        }
+        if (field === 'blacklisted') {
+          return value ? 'text-red-500' : 'text-green-500';
+        }
+        if (field === 'blacklist_severity') {
+          return value === 'High' ? 'text-red-500' : value === 'Medium' ? 'text-orange-500' : 'text-yellow-500';
+        }
+        if (field === 'reputation') {
+          return value > 0 ? 'text-green-500' : value < 0 ? 'text-red-500' : 'text-gray-500';
+        }
+        if (field === 'malicious') {
+          return value > 0 ? 'text-red-500' : 'text-gray-500';
+        }
+        if (field === 'suspicious') {
+          return value > 0 ? 'text-yellow-500' : 'text-gray-500';
+        }
+        if (value === null || value === 'null') return 'text-gray-400';
+        return 'text-gray-700';
+      };
+
+      const createAnalysisMeter = (harmless, malicious, suspicious, timeout, undetected) => {
+        const total = harmless + malicious + suspicious + timeout + undetected;
+        if (total === 0) return '';
+        
+        const harmlessPercent = (harmless / total) * 100;
+        const maliciousPercent = (malicious / total) * 100;
+        const suspiciousPercent = (suspicious / total) * 100;
+        const timeoutPercent = (timeout / total) * 100;
+        
+        return `
+          <div class="w-full bg-gray-200 rounded-full h-2.5 my-1">
+            <div class="bg-green-500 h-2.5 rounded-full" style="width: ${harmlessPercent}%"></div>
+            <div class="bg-red-500 h-2.5 rounded-full -mt-2.5" style="width: ${maliciousPercent}%; margin-left: ${harmlessPercent}%"></div>
+            <div class="bg-yellow-500 h-2.5 rounded-full -mt-2.5" style="width: ${suspiciousPercent}%; margin-left: ${harmlessPercent + maliciousPercent}%"></div>
+            <div class="bg-gray-400 h-2.5 rounded-full -mt-2.5" style="width: ${timeoutPercent}%; margin-left: ${harmlessPercent + maliciousPercent + suspiciousPercent}%"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-500">
+            <span>Harmless: ${harmless}</span>
+            <span>Malicious: ${malicious}</span>
+            <span>Suspicious: ${suspicious}</span>
+            <span>Timeout: ${timeout}</span>
+            <span>Undetected: ${undetected}</span>
+          </div>
+        `;
+      };
+
+      const displayBlock = (title, content, sectionIcon) => {
+        const card = document.createElement("div");
+        card.className = "p-4 border rounded-lg bg-white shadow-sm";
+        
+        let html = `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="p-2 rounded-full bg-primary-100 text-primary-500">
+              <i data-feather="${sectionIcon}" class="w-5 h-5"></i>
+            </span>
+            <h4 class="font-semibold text-lg">${title}</h4>
+          </div>
+          <div class="space-y-3">
+        `;
+
+        // Special handling for VirusTotal
+        if (title === "VirusTotal" && content.last_analysis) {
+          const analysis = content.last_analysis;
+          html += `
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <div class="flex items-center gap-2 mb-2">
+                <i data-feather="activity" class="w-4 h-4 text-gray-500"></i>
+                <span class="font-medium">Security Analysis</span>
+              </div>
+              ${createAnalysisMeter(
+                analysis.harmless || 0,
+                analysis.malicious || 0,
+                analysis.suspicious || 0,
+                analysis.timeout || 0,
+                analysis.undetected || 0
+              )}
+            </div>
+          `;
+        }
+
+        for (let key in content) {
+          // Skip nested objects we handle specially
+          if (key === 'last_analysis') continue;
+          
+          let value = content[key];
+          const icon = getIconForField(key, value);
+          const color = getColorForValue(key, value);
+          
+          if (Array.isArray(value) && value.length > 0) {
+            html += `
+              <div class="flex items-start gap-2">
+                <span class="mt-1 text-gray-400">
+                  <i data-feather="${icon}" class="w-4 h-4"></i>
+                </span>
+                <div class="flex-1">
+                  <span class="font-medium capitalize">${key.replace('_', ' ')}:</span>
+                  <ul class="mt-1 ml-4 space-y-2">
+            `;
+            
+            // Special handling for Shodan vulnerabilities
+            if (key === 'vulnerabilities') {
+              value.forEach(vuln => {
+                html += `
+                  <li class="flex items-start gap-2">
+                    <i data-feather="alert-triangle" class="w-3.5 h-3.5 mt-0.5 text-red-400"></i>
+                    <a href="https://nvd.nist.gov/vuln/detail/${vuln}" target="_blank" class="text-red-500 hover:underline">
+                      ${vuln}
+                    </a>
+                  </li>
+                `;
+              });
+            } 
+            // Special handling for Shodan ports
+            else if (key === 'ports') {
+              html += `<div class="flex flex-wrap gap-1 mt-1">`;
+              value.forEach(port => {
+                html += `
+                  <span class="px-2 py-0.5 bg-gray-100 rounded-full text-xs flex items-center gap-1">
+                    <i data-feather="hard-drive" class="w-3 h-3"></i>
+                    ${port}
+                  </span>
+                `;
+              });
+              html += `</div>`;
+            }
+            // Default array handling
+            else {
+              value.forEach(item => {
+                if (typeof item === 'object') {
+                  html += `<li class="pl-2 border-l-2 border-gray-200">`;
+                  for (let subKey in item) {
+                    const subIcon = getIconForField(subKey, item[subKey]);
+                    const subColor = getColorForValue(subKey, item[subKey]);
+                    html += `
+                      <div class="flex items-start gap-2">
+                        <span class="mt-1 text-gray-400">
+                          <i data-feather="${subIcon}" class="w-3.5 h-3.5"></i>
+                        </span>
+                        <div class="flex-1 flex justify-between">
+                          <span class="text-gray-600">${subKey}:</span> 
+                          <span class="${subColor}">${item[subKey] === null ? 'N/A' : item[subKey]}</span>
+                        </div>
+                      </div>
+                    `;
+                  }
+                  html += `</li>`;
+                } else {
+                  html += `<li>${item}</li>`;
+                }
+              });
+            }
+            html += `</ul></div></div>`;
+          }
+          else if (typeof value === 'object' && value !== null) {
+            html += `
+              <div class="flex items-start gap-2">
+                <span class="mt-1 text-gray-400">
+                  <i data-feather="${icon}" class="w-4 h-4"></i>
+                </span>
+                <div class="flex-1">
+                  <span class="font-medium capitalize">${key.replace('_', ' ')}:</span>
+                  <ul class="mt-1 ml-4 space-y-2">
+            `;
+            for (let subKey in value) {
+              const subIcon = getIconForField(subKey, value[subKey]);
+              const subColor = getColorForValue(subKey, value[subKey]);
+              html += `
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 text-gray-400">
+                    <i data-feather="${subIcon}" class="w-3.5 h-3.5"></i>
+                  </span>
+                  <div class="flex-1 flex justify-between">
+                    <span class="text-gray-600">${subKey}:</span> 
+                    <span class="${subColor}">${value[subKey] === null ? 'N/A' : value[subKey]}</span>
+                  </div>
+                </li>
+              `;
+            }
+            html += `</ul></div></div>`;
+          }
+          else {
+            html += `
+              <div class="flex items-center gap-2">
+                <span class="text-gray-400">
+                  <i data-feather="${icon}" class="w-4 h-4"></i>
+                </span>
+                <div class="flex-1 flex justify-between">
+                  <span class="font-medium capitalize">${key.replace('_', ' ')}:</span>
+                  <span class="${color}">
+                    ${value === null || value === 'null' ? 'N/A' : value}
+                  </span>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        html += `</div>`;
+        card.innerHTML = html;
+        results.appendChild(card);
+      };
+
+      if (data.abuseipdb) displayBlock("AbuseIPDB", data.abuseipdb, "shield");
+      if (data.blacklistmaster) displayBlock("Blacklist Check", data.blacklistmaster, "list");
+      if (data.virustotal) displayBlock("VirusTotal", data.virustotal, "shield");
+      if (data.shodan) displayBlock("Shodan", data.shodan, "eye");
+      
+      if (!data.abuseipdb && !data.blacklistmaster && !data.virustotal && !data.shodan) {
+        results.innerHTML = `
+          <div class="text-center py-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-3">
+              <i data-feather="info" class="w-8 h-8 text-gray-400"></i>
+            </div>
+            <h5 class="font-medium text-gray-600 mb-1">No threat data found</h5>
+            <p class="text-gray-500">This IP address doesn't appear in any threat databases we checked.</p>
+          </div>
+        `;
+      }
+
+      feather.replace();
+    } catch (err) {
+      console.error(err);
+      loading.classList.add("hidden");
+      error.classList.remove("hidden");
+      feather.replace();
+    }
+  });
+  
+  // Initialize Feather icons
+  document.addEventListener('DOMContentLoaded', function() {
+    feather.replace();
+  });
+</script>
     <script src="./assets/js/plugins/simplebar.min.js"></script>
     <script src="./assets/js/plugins/popper.min.js"></script>
     <script src="./assets/js/icon/custom-icon.js"></script>
@@ -318,7 +612,7 @@
     resultContainer.classList.add("hidden");
 
     try {
-      const res = await fetch(`/api/query?value=${encodeURIComponent(query)}`);
+      const res = await fetch(`/api/ip_threat?ip=${encodeURIComponent(query)}`);
       const data = await res.json();
       loading.style.display = "none";
 

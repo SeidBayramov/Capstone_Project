@@ -289,6 +289,12 @@ def mitre_from_json():
         return jsonify(data)
     except Exception as e:
         return jsonify({"error": f"Failed to load MITRE data: {str(e)}"}), 500
+    
+# ------------------ TI Section ------------------ #
+from ip_threat_controller import ip_threat_bp
+app.register_blueprint(ip_threat_bp)
+
+
 
 
 # ------------------ RUN APP ------------------ #
